@@ -1,8 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import TransactionsView from './views/TransactionsView.vue';
+</script>
 
 <template>
-  <h1>Mint</h1>
+  <transactions-view></transactions-view>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
