@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useRoute } from 'vue-router';
 import {
   LayoutDashboard,
   Coins,
@@ -14,13 +15,19 @@ interface NavLink {
 }
 
 const title = ref('Mint');
-
+const route = useRoute();
 const navLinks = ref<NavLink[]>([
-  { name: 'DASHBOARD', href: '#', icon: LayoutDashboard },
-  { name: 'TRANSACTIONS', href: '#', icon: Coins },
-  { name: 'BUDGETS', href: '#', icon: Wallet },
-  { name: 'ACCOUNT', href: '#', icon: CircleUserRound },
+  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'Transactions', href: '/transactions', icon: Coins },
+  { name: 'Budgets', href: '/budgets', icon: Wallet },
+  { name: 'Account', href: '/account', icon: CircleUserRound },
 ]);
+
+const isActiveLink = computed(
+  () => (linkName: string) =>
+    route.name === linkName ||
+    route.path === navLinks.value.find((link) => link.name === linkName)?.href
+);
 </script>
 
 <template>
@@ -30,10 +37,14 @@ const navLinks = ref<NavLink[]>([
       <nav>
         <ul class="nav-list">
           <li v-for="link in navLinks" :key="link.name">
-            <a :href="link.href" class="nav-link">
+            <router-link
+              :to="link.href"
+              class="nav-link"
+              :class="{ 'active-link': isActiveLink(link.name) }"
+            >
               <component :is="link.icon" class="icon" />
-              {{ link.name }}
-            </a>
+              {{ link.name.toUpperCase() }}
+            </router-link>
           </li>
         </ul>
       </nav>
@@ -76,12 +87,40 @@ const navLinks = ref<NavLink[]>([
   letter-spacing: 1.2px;
   gap: 0.5rem;
   padding: 10px 15px;
-  border-radius: 5px;
-  transition: background-color 0.2s;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #ffffff80;
+  transform: translateX(-50%);
+  transition: width 0.3s ease, left 0.3s ease, transform 0.3s ease;
 }
 
 .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.04);
+  color: #ffffff80;
+}
+
+.nav-link.active-link::after {
+  width: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nav-link.active-link {
+  border-bottom: 2px solid transparent;
+}
+
+.nav-link:not(.active-link)::after {
+  width: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .title {
@@ -97,6 +136,6 @@ const navLinks = ref<NavLink[]>([
 .horizontal-bar {
   width: 100%;
   height: 2px;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: #ffffff80;
 }
 </style>
