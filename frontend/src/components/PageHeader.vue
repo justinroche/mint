@@ -62,11 +62,14 @@ const isActiveLink = computed(
 }
 
 .content-wrapper {
-  width: 1248px;
+  width: 100%;
+  max-width: 1312px;
+  padding: 0 2rem;
+  box-sizing: border-box;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
 }
 
 .nav-list {
@@ -80,12 +83,11 @@ const isActiveLink = computed(
 .nav-link {
   display: flex;
   align-items: center;
-  text-decoration: none;
-  color: #fff;
+  gap: 0.5rem;
+  color: #ffffff80;
   font-weight: 600;
   font-size: 0.8rem;
   letter-spacing: 1.2px;
-  gap: 0.5rem;
   padding: 10px 15px;
   position: relative;
   transition: color 0.3s ease;
@@ -99,28 +101,21 @@ const isActiveLink = computed(
   width: 0;
   height: 2px;
   background-color: #ffffff80;
-  transform: translateX(-50%);
-  transition: width 0.3s ease, left 0.3s ease, transform 0.3s ease;
+  transition: width 0.3s ease, left 0.3s ease;
 }
 
 .nav-link:hover {
-  color: #ffffff80;
+  color: #fff;
+}
+
+.active-link {
+  color: #fff;
+  cursor: default;
 }
 
 .nav-link.active-link::after {
+  left: 0;
   width: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.nav-link.active-link {
-  border-bottom: 2px solid transparent;
-}
-
-.nav-link:not(.active-link)::after {
-  width: 0;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 .title {

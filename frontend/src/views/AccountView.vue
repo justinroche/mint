@@ -1,9 +1,6 @@
-<script setup lang="ts">
-import PageHeader from '../components/PageHeader.vue';
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <page-header></page-header>
   <div class="page-body">
     <div class="columns">
       <div class="left-column"></div>
