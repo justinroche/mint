@@ -9,21 +9,17 @@ import PageHeader from '../components/PageHeader.vue';
       <div class="left-column">
         <div class="component-wrapper">
           <!-- <router-view name="add-transaction"></router-view> -->
-          <h2 class="title">Filter transactions</h2>
+          <h2 class="title">Spending pie chart</h2>
         </div>
         <div class="component-wrapper">
           <!-- <router-view name="add-transaction"></router-view> -->
-          <h2 class="title">Add a transaction</h2>
-        </div>
-        <div class="component-wrapper">
-          <!-- <router-view name="add-transaction"></router-view> -->
-          <h2 class="title">Bank accounts</h2>
+          <h2 class="title">Expenses by month</h2>
         </div>
       </div>
       <div class="right-column">
         <div class="component-wrapper">
           <!-- <router-view name="add-transaction"></router-view> -->
-          <h2 class="title">Transactions</h2>
+          <h2 class="title">Budget breakdown</h2>
         </div>
       </div>
     </div>
