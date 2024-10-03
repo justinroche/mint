@@ -91,6 +91,7 @@ const isActiveLink = computed(
   padding: 10px 15px;
   position: relative;
   transition: color 0.3s ease;
+  line-height: 1.25rem;
 }
 
 .nav-link::after {
