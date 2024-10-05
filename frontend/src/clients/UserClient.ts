@@ -16,10 +16,10 @@ export const initializeUserClient = () => {
   userStore = useUserStore();
 };
 
-export const testFetch = async () => {
+export const createUser = async (email: string, password: string) => {
   try {
-    const response = await api.get('/test');
-    console.log(response.data);
+    const response = await api.post('/create-user', { email, password });
+    userStore.user = response.data;
   } catch (error) {
     console.error(error);
   }
