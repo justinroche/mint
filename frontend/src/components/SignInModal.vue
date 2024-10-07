@@ -1,20 +1,26 @@
 <script setup lang="ts">
-import Modal from './Modal.vue';
+import ModalBorder from './ModalBorder.vue';
+import { checkLogin } from '../clients/UserClient';
+import { ref } from 'vue';
 
-const signIn = () => {
-  console.log('Sign in');
+const email = ref('');
+const password = ref('');
+
+const attemptLogin = () => {
+  checkLogin(email.value, password.value);
 };
 </script>
 
 <template>
-  <Modal>
+  <modal-border>
     <div class="modal-header">
       <h2 class="modal-title gowun-batang-bold">Welcome</h2>
       <p class="modal-subtitle">Sign in to continue.</p>
     </div>
     <div class="modal-body">
-      <form class="sign-in-form" @submit.prevent="signIn">
+      <form class="sign-in-form" @submit.prevent="attemptLogin">
         <input
+          v-model="email"
           class="form-input"
           type="email"
           id="email"
@@ -22,6 +28,7 @@ const signIn = () => {
           required
         />
         <input
+          v-model="password"
           class="form-input"
           type="password"
           id="password"
@@ -35,12 +42,12 @@ const signIn = () => {
       <p class="create-account-text">Don't have an account?</p>
       <button class="create-account-button">Create one</button>
     </div>
-  </Modal>
+  </modal-border>
 </template>
 
 <style scoped>
 .modal-header {
-  padding: 25px 0 20px;
+  padding: 30px 0 20px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
@@ -63,7 +70,7 @@ const signIn = () => {
 }
 
 .modal-footer {
-  padding: 25px 40px;
+  padding: 25px 40px 30px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -80,7 +87,7 @@ const signIn = () => {
   font-family: inherit;
   border: 0px;
   background-color: transparent;
-  color: #3bc290;
+  color: #40cc99;
   cursor: pointer;
 }
 

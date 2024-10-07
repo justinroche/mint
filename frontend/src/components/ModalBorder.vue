@@ -28,4 +28,16 @@
   border-radius: 10px;
   position: relative;
 }
+
+.modal::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(180deg, #3ac491, #9ad8c1);
+  z-index: -1;
+  border-radius: 12px;
+}
 </style>
