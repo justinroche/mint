@@ -25,13 +25,20 @@ export const createUser = async (email: string, password: string) => {
   }
 };
 
-/*
-export const fetchUser = async (userId: string) => {
+export const checkLogin = async (email: string, password: string) => {
   try {
-    const response = await api.get(`/users/${userId}`);
-    userStore.user.value = response.data;
+    const response = await api.post('/login', { email, password });
+    userStore.user = response.data;
   } catch (error) {
     console.error(error);
   }
 };
-*/
+
+export const fetchUserFromUserID = async (userId: string) => {
+  try {
+    const response = await api.get(`/users/${userId}`);
+    userStore.user = response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
