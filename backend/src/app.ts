@@ -2,7 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import config from './config/config.json' assert { type: 'json' };
-import { createUser } from './controllers/userController.js';
+import {
+  createUser,
+  getUserByEmail,
+  getUserById,
+} from './controllers/userController.js';
 
 const { MONGODB_URL, HOST, PORT } = config;
 
@@ -20,20 +24,73 @@ mongoose
   .then(() => console.log('Connected to database'))
   .catch((error) => console.log(error));
 
-app.get('/test', (req, res) => {
-  res.json({ message: 'Hello, world!' });
+app.post('/create-user', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: 'Email and password are required' });
+    }
+
+    const user = await createUser(email, password);
+
+    return res.json(user);
+  } catch (error: any) {
+    return res
+      .status(500)
+      .json({ message: 'Error creating user: ' + error.message });
+  }
 });
 
-app.post('/create-user', (req, res) => {
-  const { email, password } = req.body;
+app.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required' });
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: 'Email and password are required' });
+    }
+
+    const user = await getUserByEmail(email);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    if (user.password !== password) {
+      return res.status(401).json({ message: 'Invalid password' });
+    }
+
+    return res.json(user);
+  } catch (error: any) {
+    return res
+      .status(500)
+      .json({ message: 'Error logging in: ' + error.message });
   }
+});
 
-  createUser(email, password)
-    .then((user) => res.json(user))
-    .catch((error) => res.status(500).json({ message: error.message }));
+app.get('/users/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({ message: 'User ID is required' });
+    }
+
+    const user = await getUserById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    return res.json(user);
+  } catch (error: any) {
+    return res
+      .status(500)
+      .json({ message: 'Error fetching user: ' + error.message });
+  }
 });
 
 app.listen(PORT, () => {
