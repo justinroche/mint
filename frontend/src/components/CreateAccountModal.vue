@@ -1,32 +1,46 @@
 <script setup lang="ts">
 import ModalBorder from './ModalBorder.vue';
-import { checkLogin } from '../clients/UserClient';
+import { createUser } from '../clients/UserClient';
 import { ref } from 'vue';
 import { useShowModalStore } from '../stores/ShowModalStore';
 
 const showModalStore = useShowModalStore();
 
+const displayName = ref('');
 const email = ref('');
 const password = ref('');
+const confirmPassword = ref('');
 
-const switchToCreateAccountModal = () => {
-  showModalStore.showSignInModal = false;
-  showModalStore.showCreateAccountModal = true;
+const switchToSignInModal = () => {
+  showModalStore.showCreateAccountModal = false;
+  showModalStore.showSignInModal = true;
 };
 
-const attemptLogin = () => {
-  checkLogin(email.value, password.value);
+const createAccount = async () => {
+  if (await createUser(displayName.value, email.value, password.value)) {
+    // account created successfully
+  } else {
+    // account creation failed
+  }
 };
 </script>
 
 <template>
   <modal-border>
     <div class="modal-header">
-      <h2 class="modal-title gowun-batang-bold">Welcome</h2>
-      <p class="modal-subtitle">Sign in to continue.</p>
+      <h2 class="modal-title gowun-batang-bold">Create an account</h2>
+      <p class="modal-subtitle">Please sign up below.</p>
     </div>
     <div class="modal-body">
-      <form class="sign-in-form" @submit.prevent="attemptLogin">
+      <form class="create-account-form" @submit.prevent="createAccount">
+        <input
+          v-model="displayName"
+          class="form-input"
+          type="text"
+          id="displayName"
+          placeholder="Display Name"
+          required
+        />
         <input
           v-model="email"
           class="form-input"
@@ -43,13 +57,21 @@ const attemptLogin = () => {
           placeholder="Password"
           required
         />
-        <button class="submit-button" type="submit">Sign in</button>
+        <input
+          v-model="confirmPassword"
+          class="form-input"
+          type="password"
+          id="confirm-password"
+          placeholder="Confirm Password"
+          required
+        />
+        <button class="submit-button" type="submit">Create account</button>
       </form>
     </div>
     <div class="modal-footer">
-      <p class="create-account-text">Don't have an account?</p>
-      <button class="create-account-button" @click="switchToCreateAccountModal">
-        Create one
+      <p class="sign-in-text">Already have an account?</p>
+      <button class="sign-in-button" @click="switchToSignInModal">
+        Sign in
       </button>
     </div>
   </modal-border>
@@ -87,11 +109,11 @@ const attemptLogin = () => {
   gap: 5px;
 }
 
-.create-account-text {
+.sign-in-text {
   margin: 0;
 }
 
-.create-account-button {
+.sign-in-button {
   padding: 0px;
   font-size: 1rem;
   font-family: inherit;
@@ -101,11 +123,11 @@ const attemptLogin = () => {
   cursor: pointer;
 }
 
-.create-account-button:hover {
+.sign-in-button:hover {
   text-decoration: underline;
 }
 
-.sign-in-form {
+.create-account-form {
   display: flex;
   flex-direction: column;
   gap: 25px;

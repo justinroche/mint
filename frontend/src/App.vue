@@ -1,17 +1,38 @@
-<script lang="ts">
+<script setup lang="ts">
 import PageHeader from './components/PageHeader.vue';
 import SignInModal from './components/SignInModal.vue';
+import CreateAccountModal from './components/CreateAccountModal.vue';
+import { useShowModalStore } from './stores/ShowModalStore';
 
-export default {
-  components: {
-    PageHeader,
-    SignInModal,
-  },
-};
+const showModalStore = useShowModalStore();
 </script>
 
 <template>
-  <page-header></page-header>
-  <sign-in-modal></sign-in-modal>
-  <router-view></router-view>
+  <page-header />
+  <router-view />
+
+  <Transition name="modal">
+    <create-account-modal v-if="showModalStore.showCreateAccountModal" />
+  </Transition>
+
+  <Transition name="modal">
+    <sign-in-modal v-if="showModalStore.showSignInModal" />
+  </Transition>
 </template>
+
+<style scoped>
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-to,
+.modal-leave-from {
+  opacity: 1;
+}
+</style>
