@@ -138,6 +138,7 @@ const createAccount = async () => {
   background-color: transparent;
   font-size: 1rem;
   font-family: inherit;
+  color: inherit;
   padding: 10px;
   box-sizing: border-box;
   border: 0;
