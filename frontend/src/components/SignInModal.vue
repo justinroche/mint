@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ModalBorder from './ModalBorder.vue';
-import { checkLogin } from '../clients/UserClient';
+import { performLogin } from '../clients/UserClient';
 import { ref } from 'vue';
 import { useShowModalStore } from '../stores/ShowModalStore';
 
@@ -14,8 +14,14 @@ const switchToCreateAccountModal = () => {
   showModalStore.showCreateAccountModal = true;
 };
 
-const attemptLogin = () => {
-  checkLogin(email.value, password.value);
+const attemptLogin = async () => {
+  const error = await performLogin(email.value, password.value);
+  if (error) {
+    // TODO: handle error more elegantly
+    alert(error);
+    return;
+  }
+  showModalStore.showSignInModal = false;
 };
 </script>
 

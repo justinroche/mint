@@ -1,15 +1,39 @@
 <script setup lang="ts">
 import ModalBorder from './ModalBorder.vue';
-import { createUser } from '../clients/UserClient';
-import { ref } from 'vue';
+import { performCreateAccount } from '../clients/UserClient';
+import { computed, ref } from 'vue';
 import { useShowModalStore } from '../stores/ShowModalStore';
 
 const showModalStore = useShowModalStore();
 
+// Form data
 const displayName = ref('');
 const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
+
+// Password validation
+const minimumPasswordLength = 8;
+const isPasswordLongEnough = computed(
+  () => password.value.length >= minimumPasswordLength
+);
+const doesPasswordContainALetter = computed(() =>
+  /[a-zA-Z]/.test(password.value)
+);
+const doesPasswordContainANumber = computed(() => /\d/.test(password.value));
+const doPasswordsMatch = computed(
+  () => password.value === confirmPassword.value
+);
+const showPasswordError = computed(
+  () =>
+    password.value.length > 0 &&
+    (!isPasswordLongEnough.value ||
+      !doesPasswordContainALetter.value ||
+      !doesPasswordContainANumber.value)
+);
+const showConfirmPasswordError = computed(
+  () => confirmPassword.value.length > 0 && !doPasswordsMatch.value
+);
 
 const switchToSignInModal = () => {
   showModalStore.showCreateAccountModal = false;
@@ -17,11 +41,20 @@ const switchToSignInModal = () => {
 };
 
 const createAccount = async () => {
-  if (await createUser(displayName.value, email.value, password.value)) {
-    // account created successfully
-  } else {
-    // account creation failed
+  if (showPasswordError.value || showConfirmPasswordError.value) {
+    return;
   }
+  const error = await performCreateAccount(
+    displayName.value,
+    email.value,
+    password.value
+  );
+  if (error) {
+    // TODO: handle error more elegantly
+    alert(error);
+    return;
+  }
+  showModalStore.showCreateAccountModal = false;
 };
 </script>
 
@@ -49,22 +82,44 @@ const createAccount = async () => {
           placeholder="Email"
           required
         />
-        <input
-          v-model="password"
-          class="form-input"
-          type="password"
-          id="password"
-          placeholder="Password"
-          required
-        />
-        <input
-          v-model="confirmPassword"
-          class="form-input"
-          type="password"
-          id="confirm-password"
-          placeholder="Confirm Password"
-          required
-        />
+        <div>
+          <input
+            v-model="password"
+            class="form-input"
+            :class="{
+              error: showPasswordError,
+            }"
+            type="password"
+            id="password"
+            placeholder="Password"
+            required
+          />
+          <div v-if="showPasswordError" class="password-requirements">
+            <span v-if="!isPasswordLongEnough"
+              >Password must be at least 8 characters long.</span
+            >
+            <span v-if="!doesPasswordContainALetter"
+              >Password must contain at least one letter.</span
+            >
+            <span v-if="!doesPasswordContainANumber"
+              >Password must contain at least one number.</span
+            >
+          </div>
+        </div>
+        <div>
+          <input
+            v-model="confirmPassword"
+            class="form-input"
+            :class="{ error: showConfirmPasswordError }"
+            type="password"
+            id="confirm-password"
+            placeholder="Confirm Password"
+            required
+          />
+          <div class="password-requirements" v-if="showConfirmPasswordError">
+            <span> Passwords do not match.</span>
+          </div>
+        </div>
         <button class="submit-button" type="submit">Create account</button>
       </form>
     </div>
@@ -145,6 +200,18 @@ const createAccount = async () => {
   border-bottom: 2px solid #ffffff80;
 }
 
+.form-input.error {
+  border-bottom: 2px solid #ff4d4d;
+}
+
+.password-requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.8rem;
+  padding-top: 5px;
+}
+
 .submit-button {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -160,5 +227,9 @@ const createAccount = async () => {
 
 .submit-button:hover {
   background-color: #3eb489cc;
+}
+
+.submit-button:active {
+  background-color: #3eb489aa;
 }
 </style>

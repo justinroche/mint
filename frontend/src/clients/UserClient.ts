@@ -16,7 +16,7 @@ export const initializeUserClient = () => {
   userStore = useUserStore();
 };
 
-export const createUser = async (
+export const performCreateAccount = async (
   displayName: string,
   email: string,
   password: string
@@ -27,41 +27,26 @@ export const createUser = async (
       email,
       password,
     });
-    if (response.status === 200) {
-      userStore.user = response.data;
-      return true;
-    }
-    console.error(response.data);
-  } catch (error) {
-    console.error(error);
+    userStore.user = response.data;
+  } catch (error: any) {
+    return error.response.data.message;
   }
-  return false;
 };
 
-export const checkLogin = async (email: string, password: string) => {
+export const performLogin = async (email: string, password: string) => {
   try {
     const response = await api.post('/login', { email, password });
-    if (response.status === 200) {
-      userStore.user = response.data;
-      return true;
-    }
-    console.error(response.data);
-  } catch (error) {
-    console.error(error);
+    userStore.user = response.data;
+  } catch (error: any) {
+    return error.response.data.message;
   }
-  return false;
 };
 
 export const fetchUserFromUserID = async (userId: string) => {
   try {
     const response = await api.get(`/users/${userId}`);
-    if (response.status === 200) {
-      userStore.user = response.data;
-      return true;
-    }
-    console.error(response.data);
-  } catch (error) {
-    console.error(error);
+    userStore.user = response.data;
+  } catch (error: any) {
+    return error.response.data.message;
   }
-  return false;
 };
