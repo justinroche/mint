@@ -196,6 +196,10 @@ watch(email, async (newEmail) => {
   gap: 5px;
 }
 
+.menu-button {
+  margin: 10px 0;
+}
+
 .sign-in-text {
   margin: 0;
 }

@@ -70,5 +70,6 @@ const logOut = () => {
 
 .menu-button {
   width: 50%;
+  margin-top: 10px;
 }
 </style>

@@ -116,6 +116,10 @@ const attemptLogin = async () => {
   gap: 5px;
 }
 
+.menu-button {
+  margin: 10px 0;
+}
+
 .create-account-text {
   margin: 0;
 }
