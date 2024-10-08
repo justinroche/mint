@@ -22,7 +22,7 @@ const logOut = () => {
           <h2 class="title">Account</h2>
           <p>Display Name: {{ userStore.user.displayName }}</p>
           <p>Email: {{ userStore.user.email }}</p>
-          <button class="menu-button" @click="logOut">Log out</button>
+          <button class="menu-button" @click="logOut">Sign out</button>
         </div>
       </div>
       <div class="right-column"></div>
