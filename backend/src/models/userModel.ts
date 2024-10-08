@@ -35,6 +35,7 @@ export type SavingsGoal = {
 
 export interface User extends mongoose.Document {
   _id: ObjectId;
+  displayName: string;
   email: string;
   password: string;
   categories: Category[];
@@ -73,6 +74,7 @@ const SavingsGoalSchema = new Schema({
 });
 
 const UserSchema = new Schema({
+  displayName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   categories: [CategorySchema],

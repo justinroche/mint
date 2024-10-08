@@ -1,6 +1,7 @@
 import { UserModel, User } from '../models/userModel.js';
 
 export const createUser = async (
+  displayName: string,
   email: string,
   password: string
 ): Promise<User> => {
@@ -8,7 +9,7 @@ export const createUser = async (
     throw new Error(`Email ${email} already exists`);
   }
 
-  const user = new UserModel({ email, password });
+  const user = new UserModel({ displayName, email, password });
   await user.save();
 
   if (!user) {

@@ -26,15 +26,15 @@ mongoose
 
 app.post('/create-user', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { displayName, email, password } = req.body;
 
-    if (!email || !password) {
+    if (!displayName || !email || !password) {
       return res
         .status(400)
-        .json({ message: 'Email and password are required' });
+        .json({ message: 'Display name, email, and password are required' });
     }
 
-    const user = await createUser(email, password);
+    const user = await createUser(displayName, email, password);
 
     return res.json(user);
   } catch (error: any) {

@@ -35,6 +35,7 @@ export type SavingsGoal = {
 
 export type User = {
   _id: ID;
+  displayName: string;
   email: string;
   password: string;
   categories: Category[];
