@@ -45,6 +45,44 @@ h1 {
   line-height: 1.1;
 }
 
+.form-input {
+  width: 100%;
+  background-color: transparent;
+  font-size: 1rem;
+  font-family: inherit;
+  color: inherit;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 0;
+  border-bottom: 2px solid #ffffff80;
+}
+
+.form-input.error {
+  border-bottom: 2px solid #ff4d4d;
+}
+
+.menu-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  padding: 15px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: black;
+  background-color: #3eb489;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.menu-button:hover {
+  background-color: #3eb489cc;
+}
+
+.menu-button:active {
+  background-color: #3eb489aa;
+}
+
 #app {
   width: 100vw;
   margin: 0 auto;
