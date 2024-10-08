@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ModalBorder from './ModalBorder.vue';
-import { performCreateAccount } from '../clients/UserClient';
+import { performCreateAccountAndLogin } from '../clients/UserClient';
 import { computed, ref } from 'vue';
 import { useShowModalStore } from '../stores/ShowModalStore';
 
@@ -44,7 +44,7 @@ const createAccount = async () => {
   if (showPasswordError.value || showConfirmPasswordError.value) {
     return;
   }
-  const error = await performCreateAccount(
+  const error = await performCreateAccountAndLogin(
     displayName.value,
     email.value,
     password.value
@@ -120,7 +120,7 @@ const createAccount = async () => {
             <span> Passwords do not match.</span>
           </div>
         </div>
-        <button class="submit-button" type="submit">Create account</button>
+        <button class="menu-button" type="submit">Create account</button>
       </form>
     </div>
     <div class="modal-footer">
@@ -188,48 +188,11 @@ const createAccount = async () => {
   gap: 25px;
 }
 
-.form-input {
-  width: 100%;
-  background-color: transparent;
-  font-size: 1rem;
-  font-family: inherit;
-  color: inherit;
-  padding: 10px;
-  box-sizing: border-box;
-  border: 0;
-  border-bottom: 2px solid #ffffff80;
-}
-
-.form-input.error {
-  border-bottom: 2px solid #ff4d4d;
-}
-
 .password-requirements {
   display: flex;
   flex-direction: column;
   gap: 5px;
   font-size: 0.8rem;
   padding-top: 5px;
-}
-
-.submit-button {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  width: 100%;
-  padding: 15px;
-  font-size: 1rem;
-  font-family: inherit;
-  background-color: #3eb489;
-  border: 0;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.submit-button:hover {
-  background-color: #3eb489cc;
-}
-
-.submit-button:active {
-  background-color: #3eb489aa;
 }
 </style>

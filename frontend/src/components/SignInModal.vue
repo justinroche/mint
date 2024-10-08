@@ -49,7 +49,7 @@ const attemptLogin = async () => {
           placeholder="Password"
           required
         />
-        <button class="submit-button" type="submit">Sign in</button>
+        <button class="menu-button" type="submit">Sign in</button>
       </form>
     </div>
     <div class="modal-footer">
@@ -115,34 +115,5 @@ const attemptLogin = async () => {
   display: flex;
   flex-direction: column;
   gap: 25px;
-}
-
-.form-input {
-  width: 100%;
-  background-color: transparent;
-  font-size: 1rem;
-  font-family: inherit;
-  color: inherit;
-  padding: 10px;
-  box-sizing: border-box;
-  border: 0;
-  border-bottom: 2px solid #ffffff80;
-}
-
-.submit-button {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  width: 100%;
-  padding: 15px;
-  font-size: 1rem;
-  font-family: inherit;
-  background-color: #3eb489;
-  border: 0;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.submit-button:hover {
-  background-color: #3eb489cc;
 }
 </style>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { useUserStore } from '../stores/UserStore';
 import {
   LayoutDashboard,
   Coins,
@@ -14,13 +15,19 @@ interface NavLink {
   icon: any;
 }
 
+const userStore = useUserStore();
+
 const title = ref('Mint');
 const route = useRoute();
 const navLinks = ref<NavLink[]>([
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
   { name: 'Transactions', href: '/transactions', icon: Coins },
   { name: 'Budgets', href: '/budgets', icon: Wallet },
-  { name: 'Account', href: '/account', icon: CircleUserRound },
+  {
+    name: userStore.user.displayName ? userStore.user.displayName : 'Account',
+    href: '/account',
+    icon: CircleUserRound,
+  },
 ]);
 
 const isActiveLink = computed(
