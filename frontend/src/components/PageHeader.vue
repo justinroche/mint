@@ -17,14 +17,18 @@ interface NavLink {
 
 const userStore = useUserStore();
 
+const accountTitle = computed(() =>
+  userStore.user.displayName ? userStore.user.displayName : 'Account'
+);
+
 const title = ref('Mint');
 const route = useRoute();
-const navLinks = ref<NavLink[]>([
+const navLinks = computed<NavLink[]>(() => [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
   { name: 'Transactions', href: '/transactions', icon: Coins },
   { name: 'Budgets', href: '/budgets', icon: Wallet },
   {
-    name: userStore.user.displayName ? userStore.user.displayName : 'Account',
+    name: accountTitle.value,
     href: '/account',
     icon: CircleUserRound,
   },
