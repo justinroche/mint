@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import ModalBorder from './ModalBorder.vue';
-import { performCreateAccountAndLogin } from '../clients/UserClient';
-import { computed, ref } from 'vue';
+import {
+  performCreateAccountAndLogin,
+  checkForExistingEmail,
+} from '../clients/UserClient';
+import { computed, ref, watch } from 'vue';
 import { useShowModalStore } from '../stores/ShowModalStore';
 
 const showModalStore = useShowModalStore();
@@ -12,7 +15,8 @@ const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
 
-// Password validation
+// Email/password validation
+const isEmailTaken = ref(false);
 const minimumPasswordLength = 8;
 const isPasswordLongEnough = computed(
   () => password.value.length >= minimumPasswordLength
@@ -34,6 +38,16 @@ const showPasswordError = computed(
 const showConfirmPasswordError = computed(
   () => confirmPassword.value.length > 0 && !doPasswordsMatch.value
 );
+const disableCreateAccountButton = computed(
+  () =>
+    showPasswordError.value ||
+    showConfirmPasswordError.value ||
+    isEmailTaken.value ||
+    !email.value ||
+    !password.value ||
+    !confirmPassword.value ||
+    !displayName.value
+);
 
 const switchToSignInModal = () => {
   showModalStore.showCreateAccountModal = false;
@@ -41,9 +55,6 @@ const switchToSignInModal = () => {
 };
 
 const createAccount = async () => {
-  if (showPasswordError.value || showConfirmPasswordError.value) {
-    return;
-  }
   const error = await performCreateAccountAndLogin(
     displayName.value,
     email.value,
@@ -56,6 +67,15 @@ const createAccount = async () => {
   }
   showModalStore.showCreateAccountModal = false;
 };
+
+// Check for existing emails
+watch(email, async (newEmail) => {
+  if (newEmail) {
+    isEmailTaken.value = await checkForExistingEmail(newEmail);
+  } else {
+    isEmailTaken.value = false;
+  }
+});
 </script>
 
 <template>
@@ -74,14 +94,20 @@ const createAccount = async () => {
           placeholder="Display Name"
           required
         />
-        <input
-          v-model="email"
-          class="form-input"
-          type="email"
-          id="email"
-          placeholder="Email"
-          required
-        />
+        <div>
+          <input
+            v-model="email"
+            class="form-input"
+            :class="{ error: isEmailTaken }"
+            type="email"
+            id="email"
+            placeholder="Email"
+            required
+          />
+          <span v-if="isEmailTaken" class="requirements"
+            >This email is already registered.</span
+          >
+        </div>
         <div>
           <input
             v-model="password"
@@ -94,7 +120,7 @@ const createAccount = async () => {
             placeholder="Password"
             required
           />
-          <div v-if="showPasswordError" class="password-requirements">
+          <div v-if="showPasswordError" class="requirements">
             <span v-if="!isPasswordLongEnough"
               >Password must be at least 8 characters long.</span
             >
@@ -116,11 +142,17 @@ const createAccount = async () => {
             placeholder="Confirm Password"
             required
           />
-          <div class="password-requirements" v-if="showConfirmPasswordError">
+          <div class="requirements" v-if="showConfirmPasswordError">
             <span> Passwords do not match.</span>
           </div>
         </div>
-        <button class="menu-button" type="submit">Create account</button>
+        <button
+          class="menu-button"
+          type="submit"
+          :disabled="disableCreateAccountButton"
+        >
+          Create account
+        </button>
       </form>
     </div>
     <div class="modal-footer">
@@ -188,7 +220,7 @@ const createAccount = async () => {
   gap: 25px;
 }
 
-.password-requirements {
+.requirements {
   display: flex;
   flex-direction: column;
   gap: 5px;

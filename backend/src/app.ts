@@ -24,6 +24,24 @@ mongoose
   .then(() => console.log('Connected to database'))
   .catch((error) => console.log(error));
 
+app.get('/check-email/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    if (!email) {
+      return res.status(400).json({ message: 'No email provided' });
+    }
+
+    const user = await getUserByEmail(email);
+
+    return res.json({ exists: !!user });
+  } catch (error: any) {
+    return res
+      .status(500)
+      .json({ message: 'Error checking email: ' + error.message });
+  }
+});
+
 app.post('/create-user', async (req, res) => {
   try {
     const { displayName, email, password } = req.body;
@@ -76,7 +94,7 @@ app.get('/users/:userId', async (req, res) => {
     const { userId } = req.params;
 
     if (!userId) {
-      return res.status(400).json({ message: 'User ID is required' });
+      return res.status(400).json({ message: 'No user ID provided' });
     }
 
     const user = await getUserById(userId);

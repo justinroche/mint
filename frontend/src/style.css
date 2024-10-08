@@ -83,6 +83,11 @@ h1 {
   background-color: #3eb489aa;
 }
 
+.menu-button:disabled {
+  background-color: #3eb48955;
+  cursor: default;
+}
+
 #app {
   width: 100vw;
   margin: 0 auto;

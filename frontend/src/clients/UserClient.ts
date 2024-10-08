@@ -67,3 +67,12 @@ export const performLogout = async () => {
   userStore.user = {} as User;
   localStorage.removeItem('userID');
 };
+
+export const checkForExistingEmail = async (email: string) => {
+  try {
+    const response = await api.get(`/check-email/${email}`);
+    return response.data.exists;
+  } catch (error: any) {
+    return error.response.data.message;
+  }
+};
