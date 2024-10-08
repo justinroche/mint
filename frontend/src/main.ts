@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import './style.css';
 import App from './App.vue';
-import router from './router';
+import router, { initializeRouter } from './router';
 import {
   initializeUserClient,
   performLoginFromUserID,
@@ -14,6 +14,7 @@ app.use(router);
 app.use(pinia);
 
 initializeUserClient();
+initializeRouter();
 
 if (localStorage.getItem('userID')) {
   await performLoginFromUserID(localStorage.getItem('userID')!);
