@@ -16,29 +16,52 @@ export const initializeUserClient = () => {
   userStore = useUserStore();
 };
 
-export const createUser = async (email: string, password: string) => {
+export const createUser = async (
+  displayName: string,
+  email: string,
+  password: string
+) => {
   try {
-    const response = await api.post('/create-user', { email, password });
-    userStore.user = response.data;
+    const response = await api.post('/create-user', {
+      displayName,
+      email,
+      password,
+    });
+    if (response.status === 200) {
+      userStore.user = response.data;
+      return true;
+    }
+    console.error(response.data);
   } catch (error) {
     console.error(error);
   }
+  return false;
 };
 
 export const checkLogin = async (email: string, password: string) => {
   try {
     const response = await api.post('/login', { email, password });
-    userStore.user = response.data;
+    if (response.status === 200) {
+      userStore.user = response.data;
+      return true;
+    }
+    console.error(response.data);
   } catch (error) {
     console.error(error);
   }
+  return false;
 };
 
 export const fetchUserFromUserID = async (userId: string) => {
   try {
     const response = await api.get(`/users/${userId}`);
-    userStore.user = response.data;
+    if (response.status === 200) {
+      userStore.user = response.data;
+      return true;
+    }
+    console.error(response.data);
   } catch (error) {
     console.error(error);
   }
+  return false;
 };
