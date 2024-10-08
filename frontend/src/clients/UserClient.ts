@@ -2,6 +2,7 @@ import { useUserStore } from '../stores/UserStore';
 import { useShowModalStore } from '../stores/ShowModalStore';
 import axios from 'axios';
 import { server_host, server_port } from '../config/config.json';
+import { User } from '../types';
 
 const api = axios.create({
   baseURL: `http://${server_host}:${server_port}`,
@@ -60,4 +61,9 @@ export const performLoginFromUserID = async (userId: string) => {
   } catch (error: any) {
     return error.response.data.message;
   }
+};
+
+export const performLogout = async () => {
+  userStore.user = {} as User;
+  localStorage.removeItem('userID');
 };
