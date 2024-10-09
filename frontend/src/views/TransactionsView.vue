@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import AddATransaction from '../components/AddATransaction.vue';
+</script>
 
 <template>
   <div class="page-body">
@@ -9,12 +11,7 @@
           <h2 class="title">Filter transactions</h2>
         </div>
         <div class="component-wrapper">
-          <!-- <router-view name="add-transaction"></router-view> -->
-          <h2 class="title">Add a transaction</h2>
-        </div>
-        <div class="component-wrapper">
-          <!-- <router-view name="add-transaction"></router-view> -->
-          <h2 class="title">Bank accounts</h2>
+          <add-a-transaction />
         </div>
       </div>
       <div class="right-column">
