@@ -235,7 +235,7 @@ const submitTransaction = async () => {
 }
 
 .income {
-  border-color: #40cc99;
+  border-color: #3eb489;
 }
 
 .income-span,
@@ -244,7 +244,7 @@ const submitTransaction = async () => {
 }
 
 .income-span {
-  color: #40cc99;
+  color: #3eb489;
 }
 
 .amount-input-wrapper {
