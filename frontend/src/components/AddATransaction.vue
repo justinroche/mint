@@ -2,6 +2,8 @@
 import { computed, ref } from 'vue';
 import { useUserStore } from '../stores/UserStore';
 import { DollarSign } from 'lucide-vue-next';
+import { addTransaction } from '../clients/UserClient';
+import { Transaction } from '../types';
 
 const userStore = useUserStore();
 
@@ -30,7 +32,10 @@ const formatAmount = (value: string) => {
   // Format as currency
   const formatted = (parseInt(digitsOnly) / 100).toFixed(2);
 
-  return formatted;
+  // Add commas
+  const parts = formatted.split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return parts.join('.');
 };
 
 const handleAmountInput = (event: Event) => {
@@ -58,12 +63,32 @@ const handleAmountInput = (event: Event) => {
     }
   }, 0);
 };
+
+const submitTransaction = async () => {
+  const amountValue = parseFloat(amount.value.replace(/,/g, ''));
+
+  if (isNaN(amountValue) || amountValue === 0) {
+    // TODO: handle error more elegantly
+    alert('Please enter a valid amount.');
+    return;
+  }
+
+  const transaction: Transaction = {
+    description: description.value,
+    date: date.value,
+    categoryId: categoryId.value,
+    amount: isIncome.value ? amountValue : amountValue * -1.0,
+  };
+
+  // TODO: handle transaction submission
+  console.log(transaction);
+};
 </script>
 
 <template>
   <div>
-    <h2 class="title">Add a transaction</h2>
-    <form class="add-transaction-form">
+    <h2 class="title">Add a Transaction</h2>
+    <form class="add-transaction-form" @submit.prevent="submitTransaction">
       <input
         v-model="description"
         class="add-transaction-input"
@@ -84,6 +109,7 @@ const handleAmountInput = (event: Event) => {
             v-for="category in categories"
             :key="category._id"
             :value="category._id"
+            class="category-option"
           >
             {{ category.name }}
           </option>
@@ -119,6 +145,11 @@ const handleAmountInput = (event: Event) => {
             required
           />
         </div>
+      </div>
+      <div class="submit-section">
+        <button class="menu-button submit-button" type="submit">
+          Add {{ isIncome ? 'income' : 'expense' }}
+        </button>
       </div>
     </form>
   </div>
@@ -160,12 +191,20 @@ const handleAmountInput = (event: Event) => {
   flex-grow: 1;
 }
 
+.category-option {
+  font-size: 1rem;
+  background-color: #222222;
+  outline: 0;
+}
+
 .amount-input {
   font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .income-expense-button {
   font-family: inherit;
+  color: inherit;
   font-weight: 600;
   background-color: transparent;
   border: 2px solid #ffffff80;
@@ -215,6 +254,15 @@ const handleAmountInput = (event: Event) => {
   padding-left: 35px;
   padding-right: 10px;
   width: 100%;
+}
+
+.submit-section {
+  display: flex;
+  justify-content: center;
+}
+
+.submit-button {
+  width: 70%;
 }
 
 /* Remove spinner for WebKit browsers */
