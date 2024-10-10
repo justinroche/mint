@@ -61,35 +61,38 @@ const formatAmount = (amount: number) => {
       class="transaction-month-group"
     >
       <h2 class="month-header">{{ formatMonthYear(monthYear) }}</h2>
-      <div
+      <button
         v-for="transaction in monthTransactions"
         :key="transaction._id"
-        class="transaction"
+        class="transaction-button"
       >
-        <div class="transaction-info-section">
-          <div class="description">{{ transaction.description }}</div>
-          <div class="date-category-section">
-            <div>{{ formatDate(transaction.date) }}</div>
-            <span>&#8226;</span>
-            <div>
-              {{
-                categories.find(
-                  (category) => category._id === transaction.categoryId
-                )?.name
-              }}
+        <div class="transaction">
+          <div class="transaction-info-section">
+            <div class="description">{{ transaction.description }}</div>
+            <div class="date-category-section">
+              <div>{{ formatDate(transaction.date) }}</div>
+              <span>&#8226;</span>
+              <div>
+                {{
+                  categories.find(
+                    (category) => category._id === transaction.categoryId
+                  )?.name
+                }}
+              </div>
             </div>
           </div>
+          <div
+            class="transaction-amount-section"
+            :class="{ isIncome: transaction.amount > 0 }"
+          >
+            {{
+              (transaction.amount > 0 ? '+' : '') +
+              formatAmount(Math.abs(transaction.amount))
+            }}
+          </div>
         </div>
-        <div
-          class="transaction-amount-section"
-          :class="{ isIncome: transaction.amount > 0 }"
-        >
-          {{
-            (transaction.amount > 0 ? '+' : '') +
-            formatAmount(Math.abs(transaction.amount))
-          }}
-        </div>
-      </div>
+        <div class="edit-text">Edit</div>
+      </button>
     </div>
   </div>
 </template>
@@ -100,10 +103,32 @@ const formatAmount = (amount: number) => {
   flex-direction: column;
 }
 
-.transaction {
+.transaction-button {
+  display: flex;
+  width: 100%;
+  font-family: inherit;
+  color: inherit;
+  background-color: transparent;
+  border: none;
   border-bottom: 2px solid #ffffff40;
+  transition: background-color 0.1s;
+  position: relative;
+  overflow: hidden;
+}
+
+.transaction-button:hover {
+  background-color: #ffffff10;
+  cursor: pointer;
+}
+
+.transaction-button:active {
+  background-color: #ffffff20;
+}
+
+.transaction {
   padding: 20px;
   display: flex;
+  width: 100%;
   justify-content: space-between;
 }
 
@@ -127,6 +152,7 @@ const formatAmount = (amount: number) => {
 .description {
   font-size: 1.2rem;
   font-weight: 600;
+  text-align: left;
 }
 
 .date-category-section {
@@ -137,7 +163,8 @@ const formatAmount = (amount: number) => {
 
 .transaction-amount-section {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 
   font-size: 1.5rem;
   font-weight: 600;
@@ -145,5 +172,23 @@ const formatAmount = (amount: number) => {
 
 .isIncome {
   color: #3eb489;
+}
+
+.edit-text {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #00000020;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  opacity: 0;
+  transition: opacity 0.1s ease;
+}
+
+.transaction-button:hover .edit-text {
+  opacity: 1;
 }
 </style>

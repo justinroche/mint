@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import AddATransaction from '../components/AddATransaction.vue';
 import Transactions from '../components/Transactions.vue';
+import EditTransaction from '../components/EditTransaction.vue';
+import { useShowModalStore } from '../stores/ShowModalStore';
+import { Transition } from 'vue';
+
+const showModalStore = useShowModalStore();
 </script>
 
 <template>
@@ -21,6 +26,9 @@ import Transactions from '../components/Transactions.vue';
         </div>
       </div>
     </div>
+    <Transition name="modal">
+      <edit-transaction v-if="showModalStore.showEditTransactionModal" />
+    </Transition>
   </div>
 </template>
 
@@ -70,5 +78,20 @@ import Transactions from '../components/Transactions.vue';
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0 0 20px 0;
+}
+
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-to,
+.modal-leave-from {
+  opacity: 1;
 }
 </style>
