@@ -1,7 +1,7 @@
 import mongoose, { Schema, ObjectId } from 'mongoose';
 
 export type Category = {
-  _id: ObjectId;
+  _id?: ObjectId;
   name: string;
   type: 'expense' | 'income';
   icon?: string;
@@ -9,7 +9,7 @@ export type Category = {
 };
 
 export type Transaction = {
-  _id: ObjectId;
+  _id?: ObjectId;
   amount: number;
   date: Date;
   description: string;
@@ -17,14 +17,14 @@ export type Transaction = {
 };
 
 export type Budget = {
-  _id: ObjectId;
+  _id?: ObjectId;
   categoryId: ObjectId;
   amount: number;
   month: Date;
 };
 
 export type SavingsGoal = {
-  _id: ObjectId;
+  _id?: ObjectId;
   name: string;
   targetAmount: number;
   currentAmount: number;

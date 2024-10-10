@@ -1,7 +1,7 @@
 type ID = string;
 
 export type Category = {
-  _id: ID;
+  _id?: ID;
   name: string;
   type: 'expense' | 'income';
   icon?: string;
@@ -9,7 +9,7 @@ export type Category = {
 };
 
 export type Transaction = {
-  _id: ID;
+  _id?: ID;
   amount: number;
   date: string;
   description: string;
@@ -17,14 +17,14 @@ export type Transaction = {
 };
 
 export type Budget = {
-  _id: ID;
+  _id?: ID;
   categoryId: ID;
   amount: number;
   month: string;
 };
 
 export type SavingsGoal = {
-  _id: ID;
+  _id?: ID;
   name: string;
   targetAmount: number;
   currentAmount: number;
