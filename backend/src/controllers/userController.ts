@@ -10,6 +10,10 @@ export const createUser = async (
   }
 
   const user = new UserModel({ displayName, email, password });
+
+  user.categories.push({ name: 'Food', type: 'expense', isCustom: false });
+  user.categories.push({ name: 'Salary', type: 'income', isCustom: false });
+
   await user.save();
 
   if (!user) {
