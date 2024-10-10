@@ -10,9 +10,11 @@ const showModalStore = useShowModalStore();
 <template>
   <page-header />
 
-  <Transition name="fade">
-    <router-view />
-  </Transition>
+  <router-view v-slot="{ Component }">
+    <Transition name="fade" mode="out-in">
+      <component :is="Component" />
+    </Transition>
+  </router-view>
 
   <Transition name="modal">
     <create-account-modal v-if="showModalStore.showCreateAccountModal" />
@@ -39,9 +41,12 @@ const showModalStore = useShowModalStore();
   opacity: 1;
 }
 
-.fade-enter-active,
+.fade-enter-active {
+  transition: opacity 0.3s ease;
+}
+
 .fade-leave-active {
-  transition: opacity 0.5s ease;
+  transition: opacity 0.1s ease;
 }
 
 .fade-enter-from,
