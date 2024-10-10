@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AddATransaction from '../components/AddATransaction.vue';
+import Transactions from '../components/Transactions.vue';
 </script>
 
 <template>
@@ -15,9 +16,8 @@ import AddATransaction from '../components/AddATransaction.vue';
         </div>
       </div>
       <div class="right-column">
-        <div class="component-wrapper">
-          <!-- <router-view name="add-transaction"></router-view> -->
-          <h2 class="title">Transactions</h2>
+        <div class="component-wrapper transactions-wrapper">
+          <transactions />
         </div>
       </div>
     </div>
@@ -27,12 +27,14 @@ import AddATransaction from '../components/AddATransaction.vue';
 <style scoped>
 .page-body {
   width: 100%;
+  height: calc(100vh - var(--header-height));
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 40px;
   padding-bottom: 40px;
   display: flex;
+  box-sizing: border-box;
 }
 
 .columns {
@@ -40,6 +42,7 @@ import AddATransaction from '../components/AddATransaction.vue';
   display: flex;
   flex-direction: row;
   gap: 20px;
+  height: 100%;
 }
 
 .left-column,
@@ -48,12 +51,19 @@ import AddATransaction from '../components/AddATransaction.vue';
   display: flex;
   flex-direction: column;
   gap: 20px;
+  height: 100%;
 }
 
 .component-wrapper {
   border: 2px solid #ffffff80;
   padding: 20px;
   border-radius: 10px;
+}
+
+.transactions-wrapper {
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
 }
 
 .title {
