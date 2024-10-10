@@ -2,7 +2,7 @@ import { useUserStore } from '../stores/UserStore';
 import { useShowModalStore } from '../stores/ShowModalStore';
 import axios from 'axios';
 import { server_host, server_port } from '../config/config.json';
-import { User } from '../types';
+import { Transaction, User } from '../types';
 
 const api = axios.create({
   baseURL: `http://${server_host}:${server_port}`,
@@ -72,6 +72,20 @@ export const checkForExistingEmail = async (email: string) => {
   try {
     const response = await api.get(`/check-email/${email}`);
     return response.data.exists;
+  } catch (error: any) {
+    return error.response.data.message;
+  }
+};
+
+export const addTransaction = async (transaction: Transaction) => {
+  try {
+    const response = await api.post(
+      `/users/${userStore.user._id}/transactions`,
+      {
+        ...transaction,
+      }
+    );
+    userStore.user.transactions.push(response.data);
   } catch (error: any) {
     return error.response.data.message;
   }
