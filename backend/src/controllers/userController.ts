@@ -23,10 +23,30 @@ export const createUser = async (
   return user;
 };
 
-export const getUserById = async (userId: string): Promise<User | null> => {
-  return UserModel.findById(userId).exec();
+export const getUserById = async (userID: string): Promise<User> => {
+  const user = await UserModel.findById(userID).exec();
+  if (!user) {
+    throw new Error('User not found');
+  }
+  return user;
 };
 
 export const getUserByEmail = async (email: string): Promise<User | null> => {
   return await UserModel.findOne({ email });
+};
+
+export const updateUser = async (
+  userID: string,
+  update: object
+): Promise<User> => {
+  const updatedUser = await UserModel.findByIdAndUpdate(userID, update, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!updatedUser) {
+    throw new Error('User not found');
+  }
+
+  return updatedUser;
 };

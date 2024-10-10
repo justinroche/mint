@@ -6,7 +6,9 @@ import {
   createUser,
   getUserByEmail,
   getUserById,
+  updateUser,
 } from './controllers/userController.js';
+import { Transaction } from './models/userModel.js';
 
 const { MONGODB_URL, HOST, PORT } = config;
 
@@ -22,7 +24,7 @@ if (!MONGODB_URL) {
 mongoose
   .connect(MONGODB_URL, { dbName: 'mint' })
   .then(() => console.log('Connected to database'))
-  .catch((error) => console.log(error));
+  .catch((error) => console.error(error));
 
 app.get('/check-email/:email', async (req, res) => {
   try {
@@ -36,6 +38,7 @@ app.get('/check-email/:email', async (req, res) => {
 
     return res.json({ exists: !!user });
   } catch (error: any) {
+    console.error('Error checking email: ' + error.message);
     return res
       .status(500)
       .json({ message: 'Error checking email: ' + error.message });
@@ -56,6 +59,7 @@ app.post('/create-user', async (req, res) => {
 
     return res.json(user);
   } catch (error: any) {
+    console.error('Error creating user: ' + error.message);
     return res
       .status(500)
       .json({ message: 'Error creating user: ' + error.message });
@@ -83,21 +87,22 @@ app.post('/login', async (req, res) => {
 
     return res.json(user);
   } catch (error: any) {
+    console.error('Error logging in: ' + error.message);
     return res
       .status(500)
       .json({ message: 'Error logging in: ' + error.message });
   }
 });
 
-app.get('/users/:userId', async (req, res) => {
+app.get('/users/:userID', async (req, res) => {
   try {
-    const { userId } = req.params;
+    const { userID } = req.params;
 
-    if (!userId) {
+    if (!userID) {
       return res.status(400).json({ message: 'No user ID provided' });
     }
 
-    const user = await getUserById(userId);
+    const user = await getUserById(userID);
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -105,9 +110,44 @@ app.get('/users/:userId', async (req, res) => {
 
     return res.json(user);
   } catch (error: any) {
+    console.error('Error fetching user: ' + error.message);
     return res
       .status(500)
       .json({ message: 'Error fetching user: ' + error.message });
+  }
+});
+
+app.post('/users/:userID/transactions', async (req, res) => {
+  try {
+    const { userID } = req.params;
+    const transaction: Transaction = req.body;
+
+    if (!userID) {
+      return res.status(400).json({ message: 'No user ID provided' });
+    }
+
+    if (
+      !transaction ||
+      !transaction.description ||
+      !transaction.date ||
+      !transaction.categoryId ||
+      !transaction.amount
+    ) {
+      return res.status(400).json({
+        message: 'Description, date, category ID, and amount are required',
+      });
+    }
+
+    const user = await updateUser(userID, {
+      $push: { transactions: transaction },
+    });
+
+    return res.json(user);
+  } catch (error: any) {
+    console.error('Error adding transaction: ' + error.message);
+    return res
+      .status(500)
+      .json({ message: 'Error adding transaction: ' + error.message });
   }
 });
 
