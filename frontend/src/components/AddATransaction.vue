@@ -80,8 +80,20 @@ const submitTransaction = async () => {
     amount: isIncome.value ? amountValue : amountValue * -1.0,
   };
 
-  // TODO: handle transaction submission
-  console.log(transaction);
+  const error = await addTransaction(transaction);
+
+  if (error) {
+    // TODO: handle error more elegantly
+    alert(error);
+    return;
+  }
+
+  // Clear form
+  description.value = '';
+  date.value = '';
+  categoryId.value = '';
+  isIncome.value = false;
+  amount.value = '';
 };
 </script>
 
