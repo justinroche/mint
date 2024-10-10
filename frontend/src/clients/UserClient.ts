@@ -52,9 +52,9 @@ export const performLogin = async (email: string, password: string) => {
   }
 };
 
-export const performLoginFromUserID = async (userId: string) => {
+export const performLoginFromUserID = async (userID: string) => {
   try {
-    const response = await api.get(`/users/${userId}`);
+    const response = await api.get(`/users/${userID}`);
     userStore.user = response.data;
     saveUserIDToLocalStorage(userStore.user._id);
     showModalStore.showSignInModal = false;
