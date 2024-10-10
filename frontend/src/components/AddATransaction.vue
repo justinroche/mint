@@ -140,7 +140,6 @@ const submitTransaction = async () => {
           class="income-expense-button"
           @click="toggleIncome"
           :class="{ income: isIncome }"
-          :title="isIncome ? 'Income' : 'Expense'"
         >
           <span v-if="isIncome" class="income-span">Income</span>
           <span v-else class="expense-span">Expense</span>
@@ -201,12 +200,17 @@ const submitTransaction = async () => {
 .category-select,
 .date-input {
   flex-grow: 1;
+  transition: background-color 0.1s;
+}
+
+.category-select:hover {
+  cursor: pointer;
+  background-color: #ffffff10;
 }
 
 .category-option {
   font-size: 1rem;
   background-color: #222222;
-  outline: 0;
 }
 
 .amount-input {
@@ -224,14 +228,15 @@ const submitTransaction = async () => {
   cursor: pointer;
   padding: 15px;
   width: 170px;
+  transition: background-color 0.1s;
 }
 
 .income-expense-button:hover {
-  background-color: #ffffff12;
+  background-color: #ffffff10;
 }
 
 .income-expense-button:active {
-  background-color: #ffffff24;
+  background-color: #ffffff20;
 }
 
 .income {
