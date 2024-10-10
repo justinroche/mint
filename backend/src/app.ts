@@ -138,11 +138,14 @@ app.post('/users/:userID/transactions', async (req, res) => {
       });
     }
 
+    // Convert the date string to a UTC Date object
+    transaction.date = new Date(transaction.date + 'T00:00:00Z');
+
     const user = await updateUser(userID, {
       $push: { transactions: transaction },
     });
 
-    return res.json(user);
+    return res.json(user.transactions.slice(-1)[0]);
   } catch (error: any) {
     console.error('Error adding transaction: ' + error.message);
     return res
