@@ -37,11 +37,15 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
 
 export const updateUser = async (
   userID: string,
-  update: object
+  update: object,
+  options?: {
+    arrayFilters?: any[];
+  }
 ): Promise<User> => {
   const updatedUser = await UserModel.findByIdAndUpdate(userID, update, {
     new: true,
     runValidators: true,
+    arrayFilters: options?.arrayFilters,
   });
 
   if (!updatedUser) {

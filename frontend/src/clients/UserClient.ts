@@ -59,6 +59,7 @@ export const performLoginFromUserID = async (userID: string) => {
     saveUserIDToLocalStorage(userStore.user._id);
     showModalStore.showSignInModal = false;
   } catch (error: any) {
+    localStorage.removeItem('userID');
     return error.response.data.message;
   }
 };
@@ -86,6 +87,35 @@ export const addTransaction = async (transaction: Transaction) => {
       }
     );
     userStore.user.transactions.push(response.data);
+  } catch (error: any) {
+    return error.response.data.message;
+  }
+};
+
+export const updateTransaction = async (transaction: Transaction) => {
+  try {
+    const response = await api.put(
+      `/users/${userStore.user._id}/transactions/${transaction._id}`,
+      {
+        ...transaction,
+      }
+    );
+    userStore.user.transactions = userStore.user.transactions.map((t) =>
+      t._id === transaction._id ? response.data : t
+    );
+  } catch (error: any) {
+    return error.response.data.message;
+  }
+};
+
+export const removeTransaction = async (transactionID: string) => {
+  try {
+    await api.delete(
+      `/users/${userStore.user._id}/transactions/${transactionID}`
+    );
+    userStore.user.transactions = userStore.user.transactions.filter(
+      (t) => t._id !== transactionID
+    );
   } catch (error: any) {
     return error.response.data.message;
   }

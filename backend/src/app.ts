@@ -26,6 +26,7 @@ mongoose
   .then(() => console.log('Connected to database'))
   .catch((error) => console.error(error));
 
+// Check if an email is already in use
 app.get('/check-email/:email', async (req, res) => {
   try {
     const { email } = req.params;
@@ -45,6 +46,7 @@ app.get('/check-email/:email', async (req, res) => {
   }
 });
 
+// Create a new user
 app.post('/create-user', async (req, res) => {
   try {
     const { displayName, email, password } = req.body;
@@ -66,6 +68,7 @@ app.post('/create-user', async (req, res) => {
   }
 });
 
+// Log in via email and password
 app.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -94,6 +97,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
+// Get a user by their ID
 app.get('/users/:userID', async (req, res) => {
   try {
     const { userID } = req.params;
@@ -117,6 +121,7 @@ app.get('/users/:userID', async (req, res) => {
   }
 });
 
+// Add a new transaction to the user's transactions array
 app.post('/users/:userID/transactions', async (req, res) => {
   try {
     const { userID } = req.params;
@@ -130,7 +135,7 @@ app.post('/users/:userID/transactions', async (req, res) => {
       !transaction ||
       !transaction.description ||
       !transaction.date ||
-      !transaction.categoryId ||
+      !transaction.categoryID ||
       !transaction.amount
     ) {
       return res.status(400).json({
@@ -151,6 +156,87 @@ app.post('/users/:userID/transactions', async (req, res) => {
     return res
       .status(500)
       .json({ message: 'Error adding transaction: ' + error.message });
+  }
+});
+
+// Update a transaction in the user's transactions array
+app.put('/users/:userID/transactions/:transactionID', async (req, res) => {
+  try {
+    const { userID, transactionID } = req.params;
+    const transaction: Transaction = req.body;
+    if (!userID || !transactionID) {
+      return res
+        .status(400)
+        .json({ message: 'User ID and transaction ID are required' });
+    }
+    if (
+      !transaction ||
+      !transaction.description ||
+      !transaction.date ||
+      !transaction.categoryID ||
+      !transaction.amount
+    ) {
+      return res.status(400).json({
+        message: 'Description, date, category ID, and amount are required',
+      });
+    }
+    // Convert the date string to a UTC Date object
+    transaction.date = new Date(transaction.date + 'T00:00:00Z');
+
+    const updatedUser = await updateUser(
+      userID,
+      {
+        $set: {
+          'transactions.$[transaction]': transaction,
+        },
+      },
+      {
+        arrayFilters: [{ 'transaction._id': transactionID }],
+      }
+    );
+
+    const updatedTransaction = updatedUser.transactions.find(
+      (t) => t._id!.toString() === transactionID
+    );
+
+    if (!updatedTransaction) {
+      return res.status(404).json({ message: 'Transaction not found' });
+    }
+
+    return res.json(updatedTransaction);
+  } catch (error: any) {
+    console.error('Error updating transaction: ' + error.message);
+    return res
+      .status(500)
+      .json({ message: 'Error updating transaction: ' + error.message });
+  }
+});
+
+// Remove a transaction from the user's transactions array
+app.delete('/users/:userID/transactions/:transactionID', async (req, res) => {
+  try {
+    const { userID, transactionID } = req.params;
+
+    if (!userID || !transactionID) {
+      return res
+        .status(400)
+        .json({ message: 'User ID and transaction ID are required' });
+    }
+
+    const updatedUser = await updateUser(userID, {
+      $pull: { transactions: { _id: transactionID } },
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    return res.json({ message: 'Transaction removed' });
+  } catch (error: any) {
+    console.error('Error removing transaction: ' + error.message);
+    return res
+      .status(500)
+      .json({ message: 'Error removing transaction: ' + error.message });
   }
 });
 
