@@ -1,24 +1,21 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { useUserStore } from '../stores/UserStore';
-import { DollarSign } from 'lucide-vue-next';
-import { addTransaction } from '../clients/UserClient';
+import { useEditTransactionStore } from '../stores/EditTransactionStore';
+import { useShowModalStore } from '../stores/ShowModalStore';
+import { DollarSign, Trash2 } from 'lucide-vue-next';
+import { updateTransaction, removeTransaction } from '../clients/UserClient';
 import { Transaction } from '../types';
 import ModalBorder from './ModalBorder.vue';
 
 const userStore = useUserStore();
+const editTransactionStore = useEditTransactionStore();
+const showModalStore = useShowModalStore();
 
 const categories = computed(() => userStore.user.categories);
 
-// Form data
-const description = ref('');
-const date = ref('');
-const categoryId = ref('');
-const isIncome = ref(false);
-const amount = ref('');
-
 const toggleIncome = () => {
-  isIncome.value = !isIncome.value;
+  editTransactionStore.isIncome = !editTransactionStore.isIncome;
 };
 
 const formatAmount = (value: string) => {
@@ -48,7 +45,7 @@ const handleAmountInput = (event: Event) => {
   const formattedValue = formatAmount(input.value);
 
   // Update the input value
-  amount.value = formattedValue;
+  editTransactionStore.amount = formattedValue;
 
   // Adjust cursor position
   setTimeout(() => {
@@ -66,7 +63,7 @@ const handleAmountInput = (event: Event) => {
 };
 
 const submitTransaction = async () => {
-  const amountValue = parseFloat(amount.value.replace(/,/g, ''));
+  const amountValue = parseFloat(editTransactionStore.amount.replace(/,/g, ''));
 
   if (isNaN(amountValue) || amountValue === 0) {
     // TODO: handle error more elegantly
@@ -75,13 +72,14 @@ const submitTransaction = async () => {
   }
 
   const transaction: Transaction = {
-    description: description.value,
-    date: date.value,
-    categoryId: categoryId.value,
-    amount: isIncome.value ? amountValue : amountValue * -1.0,
+    _id: editTransactionStore.id,
+    description: editTransactionStore.description,
+    date: editTransactionStore.date,
+    categoryID: editTransactionStore.categoryID,
+    amount: editTransactionStore.isIncome ? amountValue : amountValue * -1.0,
   };
 
-  const error = await addTransaction(transaction);
+  const error = await updateTransaction(transaction);
 
   if (error) {
     // TODO: handle error more elegantly
@@ -89,12 +87,44 @@ const submitTransaction = async () => {
     return;
   }
 
+  showModalStore.showEditTransactionModal = false;
+
   // Clear form
-  description.value = '';
-  date.value = '';
-  categoryId.value = '';
-  isIncome.value = false;
-  amount.value = '';
+  editTransactionStore.description = '';
+  editTransactionStore.date = '';
+  editTransactionStore.categoryID = '';
+  editTransactionStore.isIncome = false;
+  editTransactionStore.amount = '';
+};
+
+const cancelEdit = () => {
+  showModalStore.showEditTransactionModal = false;
+
+  // Clear form
+  editTransactionStore.description = '';
+  editTransactionStore.date = '';
+  editTransactionStore.categoryID = '';
+  editTransactionStore.isIncome = false;
+  editTransactionStore.amount = '';
+};
+
+const deleteTransaction = async () => {
+  const error = await removeTransaction(editTransactionStore.id);
+
+  if (error) {
+    // TODO: handle error more elegantly
+    alert(error);
+    return;
+  }
+
+  showModalStore.showEditTransactionModal = false;
+
+  // Clear form
+  editTransactionStore.description = '';
+  editTransactionStore.date = '';
+  editTransactionStore.categoryID = '';
+  editTransactionStore.isIncome = false;
+  editTransactionStore.amount = '';
 };
 </script>
 
@@ -104,7 +134,7 @@ const submitTransaction = async () => {
       <h2 class="title">Edit Transaction</h2>
       <form class="add-transaction-form" @submit.prevent="submitTransaction">
         <input
-          v-model="description"
+          v-model="editTransactionStore.description"
           class="add-transaction-input"
           type="text"
           id="description"
@@ -113,7 +143,7 @@ const submitTransaction = async () => {
         />
         <div class="category-date-section">
           <select
-            v-model="categoryId"
+            v-model="editTransactionStore.categoryID"
             class="add-transaction-input category-select"
             id="category"
             required
@@ -129,7 +159,7 @@ const submitTransaction = async () => {
             </option>
           </select>
           <input
-            v-model="date"
+            v-model="editTransactionStore.date"
             class="add-transaction-input date-input"
             type="date"
             id="date"
@@ -141,15 +171,17 @@ const submitTransaction = async () => {
             type="button"
             class="income-expense-button"
             @click="toggleIncome"
-            :class="{ income: isIncome }"
+            :class="{ income: editTransactionStore.isIncome }"
           >
-            <span v-if="isIncome" class="income-span">Income</span>
+            <span v-if="editTransactionStore.isIncome" class="income-span"
+              >Income</span
+            >
             <span v-else class="expense-span">Expense</span>
           </button>
           <div class="amount-input-wrapper">
             <DollarSign class="dollar-icon" :size="32" />
             <input
-              v-model="amount"
+              v-model="editTransactionStore.amount"
               class="add-transaction-input amount-input"
               type="text"
               inputmode="decimal"
@@ -160,9 +192,21 @@ const submitTransaction = async () => {
           </div>
         </div>
         <div class="submit-section">
-          <button class="menu-button submit-button" type="submit">
-            Add {{ isIncome ? 'income' : 'expense' }}
+          <button
+            class="menu-button delete-button"
+            type="button"
+            @click="deleteTransaction"
+          >
+            <Trash2 />
           </button>
+          <button
+            class="menu-button cancel-button"
+            type="button"
+            @click="cancelEdit"
+          >
+            Cancel
+          </button>
+          <button class="menu-button" type="submit">Save changes</button>
         </div>
       </form>
     </div>
@@ -236,7 +280,7 @@ const submitTransaction = async () => {
   border-radius: 5px;
   cursor: pointer;
   padding: 15px;
-  width: 170px;
+  width: 200px;
   transition: background-color 0.1s;
 }
 
@@ -284,11 +328,39 @@ const submitTransaction = async () => {
 
 .submit-section {
   display: flex;
-  justify-content: center;
+  gap: 25px;
 }
 
-.submit-button {
-  width: 70%;
+.delete-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  padding: 10px;
+  background-color: #ff3d3d;
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #ff3d3da0;
+}
+
+.delete-button:active {
+  background-color: #ff3d3d80;
+}
+
+.cancel-button {
+  width: 300px;
+  background-color: #444444;
+  color: white;
+}
+
+.cancel-button:hover {
+  background-color: #444444a0;
+}
+
+.cancel-button:active {
+  background-color: #44444480;
 }
 
 /* Remove spinner for WebKit browsers */

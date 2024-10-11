@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useUserStore } from '../stores/UserStore';
+import { useShowModalStore } from '../stores/ShowModalStore';
+import { useEditTransactionStore } from '../stores/EditTransactionStore';
 import { Transaction } from '../types';
 
 const userStore = useUserStore();
+const showModalStore = useShowModalStore();
+const editTransactionStore = useEditTransactionStore();
 
 const transactions = computed(() => userStore.user.transactions);
 const categories = computed(() => userStore.user.categories);
@@ -51,9 +55,25 @@ const formatAmount = (amount: number) => {
     currency: 'USD',
   });
 };
+
+const handleEditTransaction = (transaction: Transaction) => {
+  editTransactionStore.id = transaction._id!;
+  editTransactionStore.description = transaction.description;
+  editTransactionStore.date = transaction.date.slice(0, 10);
+  editTransactionStore.categoryID = transaction.categoryID;
+  editTransactionStore.isIncome = transaction.amount > 0;
+  editTransactionStore.amount = Math.abs(transaction.amount)
+    .toFixed(2)
+    .toString();
+
+  showModalStore.showEditTransactionModal = true;
+};
 </script>
 
 <template>
+  <div class="no-transactions" v-if="transactions.length === 0">
+    No transactions yet. Add one to get started!
+  </div>
   <div class="transactions-list">
     <div
       v-for="(monthTransactions, monthYear) in transactionsByMonth"
@@ -65,6 +85,7 @@ const formatAmount = (amount: number) => {
         v-for="transaction in monthTransactions"
         :key="transaction._id"
         class="transaction-button"
+        @click="handleEditTransaction(transaction)"
       >
         <div class="transaction">
           <div class="transaction-info-section">
@@ -75,7 +96,7 @@ const formatAmount = (amount: number) => {
               <div>
                 {{
                   categories.find(
-                    (category) => category._id === transaction.categoryId
+                    (category) => category._id === transaction.categoryID
                   )?.name
                 }}
               </div>
@@ -98,6 +119,10 @@ const formatAmount = (amount: number) => {
 </template>
 
 <style scoped>
+.no-transactions {
+  text-align: center;
+}
+
 .transactions-list {
   display: flex;
   flex-direction: column;
