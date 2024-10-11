@@ -13,12 +13,12 @@ export type Transaction = {
   amount: number;
   date: Date;
   description: string;
-  categoryId: ObjectId;
+  categoryID: ObjectId;
 };
 
 export type Budget = {
   _id?: ObjectId;
-  categoryId: ObjectId;
+  categoryID: ObjectId;
   amount: number;
   month: Date;
 };
@@ -55,11 +55,11 @@ const TransactionSchema = new Schema({
   amount: { type: Number, required: true },
   date: { type: Date, required: true },
   description: { type: String, required: true },
-  categoryId: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
+  categoryID: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
 });
 
 const BudgetSchema = new Schema({
-  categoryId: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
+  categoryID: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
   amount: { type: Number, required: true },
   month: { type: Date, required: true },
 });

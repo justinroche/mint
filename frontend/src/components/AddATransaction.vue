@@ -12,7 +12,7 @@ const categories = computed(() => userStore.user.categories);
 // Form data
 const description = ref('');
 const date = ref('');
-const categoryId = ref('');
+const categoryID = ref('');
 const isIncome = ref(false);
 const amount = ref('');
 
@@ -76,7 +76,7 @@ const submitTransaction = async () => {
   const transaction: Transaction = {
     description: description.value,
     date: date.value,
-    categoryId: categoryId.value,
+    categoryID: categoryID.value,
     amount: isIncome.value ? amountValue : amountValue * -1.0,
   };
 
@@ -91,7 +91,7 @@ const submitTransaction = async () => {
   // Clear form
   description.value = '';
   date.value = '';
-  categoryId.value = '';
+  categoryID.value = '';
   isIncome.value = false;
   amount.value = '';
 };
@@ -111,7 +111,7 @@ const submitTransaction = async () => {
       />
       <div class="category-date-section">
         <select
-          v-model="categoryId"
+          v-model="categoryID"
           class="add-transaction-input category-select"
           id="category"
           required
@@ -199,7 +199,7 @@ const submitTransaction = async () => {
 
 .category-select,
 .date-input {
-  flex-grow: 1;
+  width: 100%;
   transition: background-color 0.1s;
 }
 
@@ -227,7 +227,7 @@ const submitTransaction = async () => {
   border-radius: 5px;
   cursor: pointer;
   padding: 15px;
-  width: 170px;
+  width: 200px;
   transition: background-color 0.1s;
 }
 

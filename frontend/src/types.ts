@@ -13,12 +13,12 @@ export type Transaction = {
   amount: number;
   date: string;
   description: string;
-  categoryId: ID;
+  categoryID: ID;
 };
 
 export type Budget = {
   _id?: ID;
-  categoryId: ID;
+  categoryID: ID;
   amount: number;
   month: string;
 };
