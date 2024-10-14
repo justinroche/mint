@@ -126,6 +126,8 @@ const deleteTransaction = async () => {
   editTransactionStore.isIncome = false;
   editTransactionStore.amount = '';
 };
+
+editTransactionStore.amount = formatAmount(editTransactionStore.amount);
 </script>
 
 <template>
