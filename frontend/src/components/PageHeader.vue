@@ -44,7 +44,10 @@ const isActiveLink = computed(
 <template>
   <header class="top-bar">
     <div class="content-wrapper">
-      <h1 class="gowun-batang-bold title">{{ title }}</h1>
+      <div class="title-wrapper">
+        <img src="../public/mint-logo-circle.png" alt="Mint logo" width="34" />
+        <h1 class="gowun-batang-bold title">{{ title }}</h1>
+      </div>
       <nav>
         <ul class="nav-list">
           <li v-for="link in navLinks" :key="link.name">
@@ -81,6 +84,12 @@ const isActiveLink = computed(
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
+}
+
+.title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .nav-list {
