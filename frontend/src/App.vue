@@ -1,43 +1,25 @@
 <script setup lang="ts">
 import PageHeader from './components/PageHeader.vue';
-import SignInModal from './components/SignInModal.vue';
-import CreateAccountModal from './components/CreateAccountModal.vue';
-import { useShowModalStore } from './stores/ShowModalStore';
+import { useRoute } from 'vue-router';
 
-const showModalStore = useShowModalStore();
+const route = useRoute();
 </script>
 
 <template>
-  <page-header />
+  <Transition name="fade" mode="out-in">
+    <component :is="PageHeader" v-if="route.path !== '/'" />
+  </Transition>
 
   <router-view v-slot="{ Component }">
     <Transition name="fade" mode="out-in">
       <component :is="Component" />
     </Transition>
   </router-view>
-
-  <Transition name="modal">
-    <create-account-modal v-if="showModalStore.showCreateAccountModal" />
-  </Transition>
-
-  <Transition name="modal">
-    <sign-in-modal v-if="showModalStore.showSignInModal" />
-  </Transition>
 </template>
 
 <style scoped>
-.modal-enter-active,
-.modal-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.modal-enter-from,
-.modal-leave-to {
-  opacity: 0;
-}
-
-.modal-enter-to,
-.modal-leave-from {
+.fade-enter-to,
+.fade-leave-from {
   opacity: 1;
 }
 

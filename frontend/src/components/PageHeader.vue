@@ -24,7 +24,7 @@ const accountTitle = computed(() =>
 const title = ref('Mint');
 const route = useRoute();
 const navLinks = computed<NavLink[]>(() => [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Transactions', href: '/transactions', icon: Coins },
   { name: 'Budgets', href: '/budgets', icon: Wallet },
   {

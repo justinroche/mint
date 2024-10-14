@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import { useUserStore } from '../stores/UserStore';
-import { useShowModalStore } from '../stores/ShowModalStore';
 import { performLogout } from '../clients/UserClient';
 import router from '../router';
 
 const userStore = useUserStore();
-const showModalStore = useShowModalStore();
 
 const logOut = () => {
   performLogout();
   router.push('/');
-  showModalStore.showSignInModal = true;
 };
 </script>
 

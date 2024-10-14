@@ -3,6 +3,7 @@ import DashboardView from './views/DashboardView.vue';
 import TransactionsView from './views/TransactionsView.vue';
 import BudgetsView from './views/BudgetsView.vue';
 import AccountView from './views/AccountView.vue';
+import LandingPageView from './views/LandingPageView.vue';
 import { useUserStore } from './stores/UserStore';
 
 let userStore: ReturnType<typeof useUserStore>;
@@ -14,6 +15,11 @@ export const initializeRouter = () => {
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
+    name: 'Landing',
+    component: LandingPageView,
+  },
+  {
+    path: '/dashboard',
     name: 'Dashboard',
     component: DashboardView,
   },
@@ -52,7 +58,7 @@ router.beforeEach((to, _from, next) => {
     !userStore.user._id &&
     !localStorage.getItem('userID')
   ) {
-    // Redirect to the dashboard if user is not signed in
+    // Redirect to the landing page if user is not signed in
     next('/');
   } else {
     next();

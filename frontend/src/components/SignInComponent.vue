@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import ModalBorder from './ModalBorder.vue';
 import { performLogin } from '../clients/UserClient';
 import { ref, watch } from 'vue';
 import { useShowModalStore } from '../stores/ShowModalStore';
+import router from '../router';
 
 const showModalStore = useShowModalStore();
 
@@ -12,9 +12,9 @@ const password = ref('');
 const showEmailError = ref(false);
 const showPasswordError = ref(false);
 
-const switchToCreateAccountModal = () => {
-  showModalStore.showSignInModal = false;
-  showModalStore.showCreateAccountModal = true;
+const switchToCreateAccountComponent = () => {
+  showModalStore.showSignInComponent = false;
+  showModalStore.showCreateAccountComponent = true;
 };
 
 const attemptLogin = async () => {
@@ -30,7 +30,7 @@ const attemptLogin = async () => {
     }
     return;
   }
-  showModalStore.showSignInModal = false;
+  router.push('/dashboard');
 };
 
 watch(email, () => {
@@ -42,12 +42,12 @@ watch(password, () => {
 </script>
 
 <template>
-  <modal-border>
-    <div class="modal-header">
-      <h2 class="modal-title gowun-batang-bold">Welcome</h2>
-      <p class="modal-subtitle">Sign in to continue.</p>
+  <div class="component">
+    <div class="header">
+      <h2 class="title gowun-batang-bold">Welcome</h2>
+      <p class="subtitle">Sign in to continue.</p>
     </div>
-    <div class="modal-body">
+    <div class="body">
       <form class="sign-in-form" @submit.prevent="attemptLogin">
         <div>
           <input
@@ -80,40 +80,47 @@ watch(password, () => {
         <button class="menu-button" type="submit">Sign in</button>
       </form>
     </div>
-    <div class="modal-footer">
+    <div class="footer">
       <p class="create-account-text">Don't have an account?</p>
-      <button class="create-account-button" @click="switchToCreateAccountModal">
+      <button
+        class="create-account-button"
+        @click="switchToCreateAccountComponent"
+      >
         Create one
       </button>
     </div>
-  </modal-border>
+  </div>
 </template>
 
 <style scoped>
-.modal-header {
+.component {
+  width: 400px;
+}
+
+.header {
   padding: 30px 0 20px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
 
-.modal-title {
+.title {
   text-align: center;
   margin: 0 0 15px 0;
   font-size: 2.25rem;
 }
 
-.modal-subtitle {
+.subtitle {
   text-align: center;
   margin: 0;
   font-size: 1rem;
 }
 
-.modal-body {
+.body {
   padding: 20px 40px;
   border-bottom: 1px solid #ffffff40;
 }
 
-.modal-footer {
+.footer {
   padding: 25px 40px 30px;
   display: flex;
   justify-content: center;

@@ -57,7 +57,7 @@ export const performLoginFromUserID = async (userID: string) => {
     const response = await api.get(`/users/${userID}`);
     userStore.user = response.data;
     saveUserIDToLocalStorage(userStore.user._id);
-    showModalStore.showSignInModal = false;
+    showModalStore.showSignInComponent = false;
   } catch (error: any) {
     localStorage.removeItem('userID');
     return error.response.data.message;
