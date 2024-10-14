@@ -3,7 +3,6 @@ import AddATransaction from '../components/AddATransaction.vue';
 import Transactions from '../components/Transactions.vue';
 import EditTransaction from '../components/EditTransaction.vue';
 import { useShowModalStore } from '../stores/ShowModalStore';
-import { Transition } from 'vue';
 
 const showModalStore = useShowModalStore();
 </script>
