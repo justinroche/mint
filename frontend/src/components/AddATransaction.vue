@@ -9,6 +9,14 @@ const userStore = useUserStore();
 
 const categories = computed(() => userStore.user.categories);
 
+const expenseCategories = computed(() =>
+  categories.value.filter((category) => category.type === 'expense')
+);
+
+const incomeCategories = computed(() =>
+  categories.value.filter((category) => category.type === 'income')
+);
+
 // Form data
 const description = ref('');
 const date = ref('');
@@ -117,14 +125,26 @@ const submitTransaction = async () => {
           required
         >
           <option value="" disabled selected hidden>Select a category</option>
-          <option
-            v-for="category in categories"
-            :key="category._id"
-            :value="category._id"
-            class="category-option"
-          >
-            {{ category.name }}
-          </option>
+          <optgroup label="Expenses">
+            <option
+              v-for="category in expenseCategories"
+              :key="category._id"
+              :value="category._id"
+              class="category-option"
+            >
+              {{ category.name }}
+            </option>
+          </optgroup>
+          <optgroup label="Income">
+            <option
+              v-for="category in incomeCategories"
+              :key="category._id"
+              :value="category._id"
+              class="category-option"
+            >
+              {{ category.name }}
+            </option>
+          </optgroup>
         </select>
         <input
           v-model="date"

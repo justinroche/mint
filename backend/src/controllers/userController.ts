@@ -11,8 +11,53 @@ export const createUser = async (
 
   const user = new UserModel({ displayName, email, password });
 
-  user.categories.push({ name: 'Food', type: 'expense', isCustom: false });
-  user.categories.push({ name: 'Salary', type: 'income', isCustom: false });
+  const defaultExpenses = [
+    'Bills',
+    'Business',
+    'Dining',
+    'Donations',
+    'Education',
+    'Entertainment',
+    'Family Care',
+    'Fees',
+    'Groceries',
+    'Insurance',
+    'Investments',
+    'Loan Payments',
+    'Medical',
+    'Miscellaneous',
+    'Personal Care',
+    'Pets',
+    'Shopping',
+    'Taxes',
+    'Technology',
+    'Transportation',
+    'Travel',
+  ];
+
+  const defaultIncomes = [
+    'Salary',
+    'Investments',
+    'Gifts',
+    'Rental Income',
+    'Miscellaneous',
+  ];
+
+  defaultExpenses.forEach((name) => {
+    user.categories.push({
+      name,
+      type: 'expense',
+      isCustom: false,
+    });
+  });
+
+  defaultIncomes.forEach((name) => {
+    user.categories.push({
+      name,
+      type: 'income',
+      isCustom: false,
+    });
+  });
 
   await user.save();
 
