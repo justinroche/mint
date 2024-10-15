@@ -29,7 +29,7 @@ const updateText = () => {
 let intervalId: number;
 
 onMounted(() => {
-  intervalId = setInterval(updateText, 5000);
+  intervalId = setInterval(updateText, 4000);
 });
 
 onBeforeUnmount(() => {
