@@ -50,7 +50,6 @@ const disableCreateAccountButton = computed(
 );
 
 const switchToSignInComponent = () => {
-  showModalStore.showCreateAccountComponent = false;
   showModalStore.showSignInComponent = true;
 };
 

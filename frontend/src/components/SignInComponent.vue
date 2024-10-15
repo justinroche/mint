@@ -14,7 +14,6 @@ const showPasswordError = ref(false);
 
 const switchToCreateAccountComponent = () => {
   showModalStore.showSignInComponent = false;
-  showModalStore.showCreateAccountComponent = true;
 };
 
 const attemptLogin = async () => {

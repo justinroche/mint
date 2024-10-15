@@ -1,5 +1,4 @@
 import { useUserStore } from '../stores/UserStore';
-import { useShowModalStore } from '../stores/ShowModalStore';
 import axios from 'axios';
 import { server_host, server_port } from '../config/config.json';
 import { Transaction, User } from '../types';
@@ -13,11 +12,9 @@ const api = axios.create({
 });
 
 let userStore: ReturnType<typeof useUserStore>;
-let showModalStore: ReturnType<typeof useShowModalStore>;
 
 export const initializeUserClient = () => {
   userStore = useUserStore();
-  showModalStore = useShowModalStore();
 };
 
 export const saveUserIDToLocalStorage = (userID: string) => {
@@ -57,7 +54,6 @@ export const performLoginFromUserID = async (userID: string) => {
     const response = await api.get(`/users/${userID}`);
     userStore.user = response.data;
     saveUserIDToLocalStorage(userStore.user._id);
-    showModalStore.showSignInComponent = false;
   } catch (error: any) {
     localStorage.removeItem('userID');
     return error.response.data.message;
