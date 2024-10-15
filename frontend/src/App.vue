@@ -42,7 +42,7 @@ watch(
 <style scoped>
 .app-container {
   position: relative;
-  transition: padding-top 0.3s ease;
+  transition: padding-top 0.2s ease;
 }
 
 .page-header {
@@ -55,7 +55,7 @@ watch(
 
 .slide-down-enter-active,
 .slide-down-leave-active {
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 .slide-down-enter-from,
@@ -69,7 +69,7 @@ watch(
 }
 
 .fade-leave-active {
-  transition: opacity 0.1s ease;
+  transition: opacity 0.2s ease;
 }
 
 .fade-enter-from,
