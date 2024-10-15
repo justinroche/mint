@@ -100,6 +100,7 @@ onBeforeUnmount(() => {
   flex: 1;
   height: 400px;
   max-height: 90%;
+  max-width: 700px;
   justify-content: space-between;
 }
 
