@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const showHeader = ref(route.path !== '/');
+const headerHeight = 76;
 
 watch(
   () => route.path,
@@ -15,28 +16,52 @@ watch(
       // Delay showing header to allow for route transition
       setTimeout(() => {
         showHeader.value = true;
-      }, 500);
+      }, 800);
     }
   }
 );
 </script>
 
 <template>
-  <Transition name="fade" mode="out-in">
-    <PageHeader v-if="showHeader" />
-  </Transition>
-
-  <router-view v-slot="{ Component }">
-    <Transition name="fade" mode="out-in">
-      <component :is="Component" />
+  <div
+    class="app-container"
+    :style="{ paddingTop: showHeader ? `${headerHeight}px` : '0' }"
+  >
+    <Transition name="slide-down">
+      <PageHeader v-if="showHeader" class="page-header" />
     </Transition>
-  </router-view>
+
+    <router-view v-slot="{ Component }">
+      <Transition name="fade" mode="out-in">
+        <component :is="Component" />
+      </Transition>
+    </router-view>
+  </div>
 </template>
 
 <style scoped>
-.fade-enter-to,
-.fade-leave-from {
-  opacity: 1;
+.app-container {
+  position: relative;
+  transition: padding-top 0.3s ease;
+}
+
+.page-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.slide-down-enter-from,
+.slide-down-leave-to {
+  transform: translateY(-100%);
+  opacity: 0;
 }
 
 .fade-enter-active {
