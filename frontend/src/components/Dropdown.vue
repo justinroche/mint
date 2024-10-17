@@ -134,7 +134,7 @@ onUnmounted(() => {
 }
 
 .group-label {
-  padding: 5px 10px;
+  padding: 10px 10px 5px;
   font-weight: bold;
   font-style: italic;
   text-align: center;
