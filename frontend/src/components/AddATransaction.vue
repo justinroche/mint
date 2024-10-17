@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useUserStore } from '../stores/UserStore';
 import { DollarSign } from 'lucide-vue-next';
 import { addTransaction } from '../clients/UserClient';
@@ -23,9 +23,11 @@ const description = ref('');
 const date = ref('');
 const categoryName = ref('');
 const isIncome = ref(false);
+const hasIncomeOrExpenseBeenForced = ref(false);
 const amount = ref('');
 
 const toggleIncome = () => {
+  hasIncomeOrExpenseBeenForced.value = true;
   isIncome.value = !isIncome.value;
 };
 
@@ -112,8 +114,24 @@ const submitTransaction = async () => {
   date.value = '';
   categoryName.value = '';
   isIncome.value = false;
+  hasIncomeOrExpenseBeenForced.value = false;
   amount.value = '';
 };
+
+watch(
+  () => categoryName.value,
+  () => {
+    if (!hasIncomeOrExpenseBeenForced.value) {
+      const category = categories.value.find(
+        (category) => category.name === categoryName.value
+      );
+
+      if (category) {
+        isIncome.value = category.type === 'income';
+      }
+    }
+  }
+);
 </script>
 
 <template>
