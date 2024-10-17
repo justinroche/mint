@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import DashboardView from './views/DashboardView.vue';
 import TransactionsView from './views/TransactionsView.vue';
-import BudgetsView from './views/BudgetsView.vue';
 import AccountView from './views/AccountView.vue';
 import LandingPageView from './views/LandingPageView.vue';
 import { useUserStore } from './stores/UserStore';
@@ -27,12 +26,6 @@ const routes: Array<RouteRecordRaw> = [
     path: '/transactions',
     name: 'Transactions',
     component: TransactionsView,
-    meta: { requiresAuth: true },
-  },
-  {
-    path: '/budgets',
-    name: 'Budgets',
-    component: BudgetsView,
     meta: { requiresAuth: true },
   },
   {

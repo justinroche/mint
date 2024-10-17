@@ -2,12 +2,7 @@
 import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserStore } from '../stores/UserStore';
-import {
-  LayoutDashboard,
-  Coins,
-  Wallet,
-  CircleUserRound,
-} from 'lucide-vue-next';
+import { LayoutDashboard, Coins, CircleUserRound } from 'lucide-vue-next';
 
 interface NavLink {
   name: string;
@@ -26,7 +21,6 @@ const route = useRoute();
 const navLinks = computed<NavLink[]>(() => [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Transactions', href: '/transactions', icon: Coins },
-  { name: 'Budgets', href: '/budgets', icon: Wallet },
   {
     name: accountTitle.value,
     href: '/account',

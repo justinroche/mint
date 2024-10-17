@@ -5,18 +5,18 @@
     <div class="columns">
       <div class="left-column">
         <div class="component-wrapper">
-          <!-- <router-view name="add-transaction"></router-view> -->
-          <h2 class="title">Balance</h2>
+          <h2 class="title">Spending pie chart</h2>
         </div>
         <div class="component-wrapper">
-          <!-- <router-view name="add-transaction"></router-view> -->
-          <h2 class="title">Some chart</h2>
+          <h2 class="title">Income vs expenses by month</h2>
         </div>
       </div>
       <div class="right-column">
         <div class="component-wrapper">
-          <!-- <router-view name="add-transaction"></router-view> -->
           <h2 class="title">Budget status</h2>
+        </div>
+        <div class="component-wrapper">
+          <h2 class="title">Budget breakdown</h2>
         </div>
       </div>
     </div>
