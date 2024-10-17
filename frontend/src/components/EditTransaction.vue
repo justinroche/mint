@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useUserStore } from '../stores/UserStore';
 import { useEditTransactionStore } from '../stores/EditTransactionStore';
 import { useShowModalStore } from '../stores/ShowModalStore';
@@ -7,6 +7,7 @@ import { DollarSign, Trash2 } from 'lucide-vue-next';
 import { updateTransaction, removeTransaction } from '../clients/UserClient';
 import { Transaction } from '../types';
 import ModalBorder from './ModalBorder.vue';
+import Dropdown from './Dropdown.vue';
 
 const userStore = useUserStore();
 const editTransactionStore = useEditTransactionStore();
@@ -20,6 +21,12 @@ const expenseCategories = computed(() =>
 
 const incomeCategories = computed(() =>
   categories.value.filter((category) => category.type === 'income')
+);
+
+const categoryName = ref(
+  categories.value.find(
+    (category) => category._id === editTransactionStore.categoryID
+  )?.name!
 );
 
 const toggleIncome = () => {
@@ -79,11 +86,21 @@ const submitTransaction = async () => {
     return;
   }
 
+  const categoryID = categories.value.find(
+    (category) => category.name === categoryName.value
+  )?._id!;
+
+  if (!categoryID) {
+    // TODO: handle error more elegantly
+    alert('Please select a category.');
+    return;
+  }
+
   const transaction: Transaction = {
     _id: editTransactionStore.id,
     description: editTransactionStore.description,
     date: editTransactionStore.date,
-    categoryID: editTransactionStore.categoryID,
+    categoryID,
     amount: editTransactionStore.isIncome ? amountValue : amountValue * -1.0,
   };
 
@@ -152,34 +169,14 @@ editTransactionStore.amount = formatAmount(editTransactionStore.amount);
           required
         />
         <div class="category-date-section">
-          <select
-            v-model="editTransactionStore.categoryID"
-            class="add-transaction-input category-select"
-            id="category"
-            required
-          >
-            <option value="" disabled selected hidden>Select a category</option>
-            <optgroup label="Expenses">
-              <option
-                v-for="category in expenseCategories"
-                :key="category._id"
-                :value="category._id"
-                class="category-option"
-              >
-                {{ category.name }}
-              </option>
-            </optgroup>
-            <optgroup label="Income">
-              <option
-                v-for="category in incomeCategories"
-                :key="category._id"
-                :value="category._id"
-                class="category-option"
-              >
-                {{ category.name }}
-              </option>
-            </optgroup>
-          </select>
+          <dropdown
+            :options="{
+              Expenses: expenseCategories.map((c) => c.name),
+              Income: incomeCategories.map((c) => c.name),
+            }"
+            v-model="categoryName"
+            class="category-select"
+          />
           <input
             v-model="editTransactionStore.date"
             class="add-transaction-input date-input"

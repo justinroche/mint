@@ -4,6 +4,7 @@ import { useUserStore } from '../stores/UserStore';
 import { DollarSign } from 'lucide-vue-next';
 import { addTransaction } from '../clients/UserClient';
 import { Transaction } from '../types';
+import Dropdown from './Dropdown.vue';
 
 const userStore = useUserStore();
 
@@ -20,7 +21,7 @@ const incomeCategories = computed(() =>
 // Form data
 const description = ref('');
 const date = ref('');
-const categoryID = ref('');
+const categoryName = ref('');
 const isIncome = ref(false);
 const amount = ref('');
 
@@ -81,10 +82,20 @@ const submitTransaction = async () => {
     return;
   }
 
+  const categoryID = categories.value.find(
+    (category) => category.name === categoryName.value
+  )?._id!;
+
+  if (!categoryID) {
+    // TODO: handle error more elegantly
+    alert('Please select a category.');
+    return;
+  }
+
   const transaction: Transaction = {
     description: description.value,
     date: date.value,
-    categoryID: categoryID.value,
+    categoryID: categoryID,
     amount: isIncome.value ? amountValue : amountValue * -1.0,
   };
 
@@ -99,7 +110,7 @@ const submitTransaction = async () => {
   // Clear form
   description.value = '';
   date.value = '';
-  categoryID.value = '';
+  categoryName.value = '';
   isIncome.value = false;
   amount.value = '';
 };
@@ -118,34 +129,14 @@ const submitTransaction = async () => {
         required
       />
       <div class="category-date-section">
-        <select
-          v-model="categoryID"
-          class="add-transaction-input category-select"
-          id="category"
-          required
-        >
-          <option value="" disabled selected hidden>Select a category</option>
-          <optgroup label="Expenses">
-            <option
-              v-for="category in expenseCategories"
-              :key="category._id"
-              :value="category._id"
-              class="category-option"
-            >
-              {{ category.name }}
-            </option>
-          </optgroup>
-          <optgroup label="Income">
-            <option
-              v-for="category in incomeCategories"
-              :key="category._id"
-              :value="category._id"
-              class="category-option"
-            >
-              {{ category.name }}
-            </option>
-          </optgroup>
-        </select>
+        <dropdown
+          :options="{
+            Expenses: expenseCategories.map((c) => c.name),
+            Income: incomeCategories.map((c) => c.name),
+          }"
+          v-model="categoryName"
+          class="category-select"
+        />
         <input
           v-model="date"
           class="add-transaction-input date-input"
