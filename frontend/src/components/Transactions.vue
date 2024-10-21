@@ -3,19 +3,35 @@ import { computed } from 'vue';
 import { useUserStore } from '../stores/UserStore';
 import { useShowModalStore } from '../stores/ShowModalStore';
 import { useEditTransactionStore } from '../stores/EditTransactionStore';
+import { useFilterTransactionsStore } from '../stores/FilterTransactionsStore';
 import { Transaction } from '../types';
 
 const userStore = useUserStore();
 const showModalStore = useShowModalStore();
 const editTransactionStore = useEditTransactionStore();
+const filterTransactionsStore = useFilterTransactionsStore();
 
 const transactions = computed(() => userStore.user.transactions);
 const categories = computed(() => userStore.user.categories);
 
 const sortedTransactions = computed(() => {
-  return [...transactions.value].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
+  if (filterTransactionsStore.sortBy === 'Newest') {
+    return [...transactions.value].sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+  } else if (filterTransactionsStore.sortBy === 'Oldest') {
+    return [...transactions.value].sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+  } else if (filterTransactionsStore.sortBy === 'Largest') {
+    return [...transactions.value].sort(
+      (a, b) => Math.abs(b.amount) - Math.abs(a.amount)
+    );
+  } else {
+    return [...transactions.value].sort(
+      (a, b) => Math.abs(a.amount) - Math.abs(b.amount)
+    );
+  }
 });
 
 const transactionsByMonth = computed<Record<string, Transaction[]>>(() => {
@@ -76,6 +92,10 @@ const handleEditTransaction = (transaction: Transaction) => {
   </div>
   <div class="transactions-list">
     <div
+      v-if="
+        filterTransactionsStore.sortBy === 'Newest' ||
+        filterTransactionsStore.sortBy === 'Oldest'
+      "
       v-for="(monthTransactions, monthYear) in transactionsByMonth"
       :key="monthYear"
       class="transaction-month-group"
@@ -84,6 +104,39 @@ const handleEditTransaction = (transaction: Transaction) => {
       <button
         v-for="transaction in monthTransactions"
         :key="transaction._id"
+        class="transaction-button"
+        @click="handleEditTransaction(transaction)"
+      >
+        <div class="transaction">
+          <div class="transaction-info-section">
+            <div class="description">{{ transaction.description }}</div>
+            <div class="date-category-section">
+              <div>{{ formatDate(transaction.date) }}</div>
+              <span>&#8226;</span>
+              <div>
+                {{
+                  categories.find(
+                    (category) => category._id === transaction.categoryID
+                  )?.name
+                }}
+              </div>
+            </div>
+          </div>
+          <div
+            class="transaction-amount-section"
+            :class="{ isIncome: transaction.amount > 0 }"
+          >
+            {{
+              (transaction.amount > 0 ? '+' : '') +
+              formatAmount(Math.abs(transaction.amount))
+            }}
+          </div>
+        </div>
+        <div class="edit-text">Edit</div>
+      </button>
+    </div>
+    <div v-else v-for="transaction in sortedTransactions">
+      <button
         class="transaction-button"
         @click="handleEditTransaction(transaction)"
       >

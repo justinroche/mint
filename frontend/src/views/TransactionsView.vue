@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AddATransaction from '../components/AddATransaction.vue';
+import FilterTransactions from '../components/FilterTransactions.vue';
 import ManageCategories from '../components/ManageCategories.vue';
 import Transactions from '../components/Transactions.vue';
 import EditTransaction from '../components/EditTransaction.vue';
@@ -13,8 +14,7 @@ const showModalStore = useShowModalStore();
     <div class="columns">
       <div class="left-column">
         <div class="component-wrapper">
-          <!-- <router-view name="add-transaction"></router-view> -->
-          <h2 class="title">Filter transactions</h2>
+          <filter-transactions />
         </div>
         <div class="component-wrapper">
           <add-a-transaction />
@@ -75,12 +75,6 @@ const showModalStore = useShowModalStore();
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
-}
-
-.title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0 0 20px 0;
 }
 
 .modal-enter-active,
