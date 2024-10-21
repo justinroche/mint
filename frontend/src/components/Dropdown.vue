@@ -119,8 +119,7 @@ onUnmounted(() => {
   background: #222222;
   border: 2px solid #ffffff80;
   border-top: none;
-  border-bottom-left-radius: 4px;
-  max-height: 350px;
+  max-height: 400px;
   overflow-y: auto;
   z-index: 1;
   font-size: 1rem;
