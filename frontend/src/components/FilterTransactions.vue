@@ -20,6 +20,14 @@ const incomeCategories = computed(() =>
 
 <template>
   <h2 class="title">Filter Transactions</h2>
+  <div class="search">
+    <input
+      class="form-input"
+      type="text"
+      v-model="filterTransactionsStore.searchQuery"
+      placeholder="Search transactions"
+    />
+  </div>
   <div class="sort-filter-row">
     <div class="sort-by">
       <label for="sort-by" class="filter-label">Sort by</label>
@@ -53,10 +61,19 @@ const incomeCategories = computed(() =>
   text-align: center;
 }
 
+.search {
+  margin-bottom: 25px;
+}
+
 .sort-filter-row {
   display: flex;
   justify-content: space-between;
-  gap: 20px;
+  gap: 25px;
+}
+
+.form-input {
+  border: 2px solid #ffffff80;
+  border-radius: 5px;
 }
 
 .sort-by,

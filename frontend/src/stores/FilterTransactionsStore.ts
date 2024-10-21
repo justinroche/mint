@@ -6,12 +6,12 @@ export const useFilterTransactionsStore = defineStore(
   () => {
     const sortBy = ref<'Oldest' | 'Newest' | 'Largest' | 'Smallest'>('Newest');
     const filterByCategory = ref('Show all');
-    const search = ref('');
+    const searchQuery = ref('');
 
     return {
       sortBy,
       filterByCategory,
-      search,
+      searchQuery,
     };
   }
 );

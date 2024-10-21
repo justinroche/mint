@@ -47,9 +47,17 @@ const filteredTransactions = computed(() => {
   }
 });
 
+const searchedTransactions = computed(() => {
+  return filteredTransactions.value.filter((transaction) =>
+    transaction.description
+      .toLowerCase()
+      .includes(filterTransactionsStore.searchQuery.toLowerCase())
+  );
+});
+
 const transactionsByMonth = computed<Record<string, Transaction[]>>(() => {
   const grouped: { [key: string]: Transaction[] } = {};
-  filteredTransactions.value.forEach((transaction) => {
+  searchedTransactions.value.forEach((transaction) => {
     const date = new Date(transaction.date);
     const monthYear: string = `${date.getUTCFullYear()}-${String(
       date.getUTCMonth() + 1
@@ -103,10 +111,10 @@ const handleEditTransaction = (transaction: Transaction) => {
   <div class="no-transactions" v-if="transactions.length === 0">
     No transactions yet. Add one to get started!
   </div>
-  <div class="no-transactions" v-else-if="filteredTransactions.length === 0">
+  <div class="no-transactions" v-else-if="searchedTransactions.length === 0">
     No transactions match the selected filters.
   </div>
-  <div class="transactions-list">
+  <div class="transactions-list" v-else>
     <div
       v-if="
         filterTransactionsStore.sortBy === 'Newest' ||
