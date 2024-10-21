@@ -67,6 +67,7 @@ const isActiveLink = computed(
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: #222;
 }
 
 .content-wrapper {
