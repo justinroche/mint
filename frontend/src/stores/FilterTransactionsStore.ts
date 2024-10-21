@@ -5,7 +5,7 @@ export const useFilterTransactionsStore = defineStore(
   'filterTransactions',
   () => {
     const sortBy = ref<'Oldest' | 'Newest' | 'Largest' | 'Smallest'>('Newest');
-    const filterByCategory = ref('');
+    const filterByCategory = ref('Show all');
     const search = ref('');
 
     return {

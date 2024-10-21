@@ -34,9 +34,22 @@ const sortedTransactions = computed(() => {
   }
 });
 
+const filteredTransactions = computed(() => {
+  if (filterTransactionsStore.filterByCategory === 'Show all') {
+    return sortedTransactions.value;
+  } else {
+    return sortedTransactions.value.filter(
+      (transaction) =>
+        categories.value.find(
+          (category) => category._id === transaction.categoryID
+        )?.name === filterTransactionsStore.filterByCategory
+    );
+  }
+});
+
 const transactionsByMonth = computed<Record<string, Transaction[]>>(() => {
   const grouped: { [key: string]: Transaction[] } = {};
-  sortedTransactions.value.forEach((transaction) => {
+  filteredTransactions.value.forEach((transaction) => {
     const date = new Date(transaction.date);
     const monthYear: string = `${date.getUTCFullYear()}-${String(
       date.getUTCMonth() + 1
@@ -90,6 +103,9 @@ const handleEditTransaction = (transaction: Transaction) => {
   <div class="no-transactions" v-if="transactions.length === 0">
     No transactions yet. Add one to get started!
   </div>
+  <div class="no-transactions" v-else-if="filteredTransactions.length === 0">
+    No transactions match the selected filters.
+  </div>
   <div class="transactions-list">
     <div
       v-if="
@@ -135,7 +151,7 @@ const handleEditTransaction = (transaction: Transaction) => {
         <div class="edit-text">Edit</div>
       </button>
     </div>
-    <div v-else v-for="transaction in sortedTransactions">
+    <div v-else v-for="transaction in filteredTransactions">
       <button
         class="transaction-button"
         @click="handleEditTransaction(transaction)"
