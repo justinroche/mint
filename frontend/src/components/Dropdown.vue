@@ -1,12 +1,5 @@
 <script setup lang="ts">
-import {
-  ref,
-  defineProps,
-  defineEmits,
-  watch,
-  onMounted,
-  onUnmounted,
-} from 'vue';
+import { ref, watch, onMounted, onUnmounted } from 'vue';
 import { ChevronDown } from 'lucide-vue-next';
 
 interface OptionGroup {
