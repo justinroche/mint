@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import BudgetProgressBar from '../components/BudgetProgressBar.vue';
+import BudgetCategory from '../components/BudgetCategory.vue';
+import ManageBudget from '../components/ManageBudget.vue';
+import { useShowModalStore } from '../stores/ShowModalStore';
+
+const showModalStore = useShowModalStore();
+
+const openManageBudgetModal = () => {
+  showModalStore.showManageBudgetModal = true;
+};
 </script>
 
 <template>
@@ -16,13 +24,18 @@ import BudgetProgressBar from '../components/BudgetProgressBar.vue';
       <div class="right-column">
         <div class="component-wrapper">
           <h2 class="title">Budget status</h2>
+          <button class="menu-button" @click="openManageBudgetModal">
+            Manage budget
+          </button>
         </div>
         <div class="component-wrapper">
           <h2 class="title">Budget breakdown</h2>
-          <budget-progress-bar />
         </div>
       </div>
     </div>
+    <Transition name="modal">
+      <manage-budget v-if="showModalStore.showManageBudgetModal" />
+    </Transition>
   </div>
 </template>
 
@@ -62,5 +75,20 @@ import BudgetProgressBar from '../components/BudgetProgressBar.vue';
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0 0 20px 0;
+}
+
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-to,
+.modal-leave-from {
+  opacity: 1;
 }
 </style>
