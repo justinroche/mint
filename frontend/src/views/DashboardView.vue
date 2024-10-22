@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import BudgetProgressBar from '../components/BudgetProgressBar.vue';
+</script>
 
 <template>
   <div class="page-body">
@@ -17,6 +19,7 @@
         </div>
         <div class="component-wrapper">
           <h2 class="title">Budget breakdown</h2>
+          <budget-progress-bar />
         </div>
       </div>
     </div>
