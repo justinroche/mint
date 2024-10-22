@@ -240,6 +240,35 @@ app.delete('/users/:userID/transactions/:transactionID', async (req, res) => {
   }
 });
 
+// Add a new budget to the user's budgets array
+app.post('/users/:userID/budgets', async (req, res) => {
+  try {
+    const { userID } = req.params;
+    const budget = req.body;
+
+    if (!userID) {
+      return res.status(400).json({ message: 'No user ID provided' });
+    }
+
+    if (!budget || !budget.categoryID || !budget.amount) {
+      return res
+        .status(400)
+        .json({ message: 'Category ID and amount are required' });
+    }
+
+    const user = await updateUser(userID, {
+      $push: { budgets: budget },
+    });
+
+    return res.json(user.budgets.slice(-1)[0]);
+  } catch (error: any) {
+    console.error('Error adding budget: ' + error.message);
+    return res
+      .status(500)
+      .json({ message: 'Error adding budget: ' + error.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`);
 });
