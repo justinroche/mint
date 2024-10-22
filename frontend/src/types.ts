@@ -20,7 +20,6 @@ export type Budget = {
   _id?: ID;
   categoryID: ID;
   amount: number;
-  month: string;
 };
 
 export type SavingsGoal = {

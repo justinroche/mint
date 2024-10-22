@@ -20,7 +20,6 @@ export type Budget = {
   _id?: ObjectId;
   categoryID: ObjectId;
   amount: number;
-  month: Date;
 };
 
 export type SavingsGoal = {
@@ -61,7 +60,6 @@ const TransactionSchema = new Schema({
 const BudgetSchema = new Schema({
   categoryID: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
   amount: { type: Number, required: true },
-  month: { type: Date, required: true },
 });
 
 const SavingsGoalSchema = new Schema({
