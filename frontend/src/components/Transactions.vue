@@ -273,7 +273,7 @@ const handleEditTransaction = (transaction: Transaction) => {
 }
 
 .isIncome {
-  color: #3eb489;
+  color: #3dcc98;
 }
 
 .edit-text {

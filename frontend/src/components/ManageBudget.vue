@@ -4,7 +4,7 @@ import { useShowModalStore } from '../stores/ShowModalStore';
 import EditBudgetCategory from './EditBudgetCategory.vue';
 import { SquarePlus } from 'lucide-vue-next';
 import { useUserStore } from '../stores/UserStore';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { Budget } from '../types';
 import { updateBudgets } from '../clients/UserClient';
 
@@ -12,6 +12,38 @@ const userStore = useUserStore();
 const showModalStore = useShowModalStore();
 const rows = ref<Partial<Budget>[]>([]);
 const usedCategories = ref<string[]>([]);
+
+const budgetExpenseTotal = computed(() =>
+  rows.value
+    .filter((row) => row.amount !== undefined)
+    .filter(
+      (row) =>
+        userStore.user.categories.find(
+          (category) => category._id === row.categoryID
+        )?.type === 'expense'
+    )
+    .reduce((acc, row) => acc + (row.amount || 0), 0)
+    .toFixed(2)
+);
+
+const budgetIncomeTotal = computed(() =>
+  rows.value
+    .filter((row) => row.amount !== undefined)
+    .filter(
+      (row) =>
+        userStore.user.categories.find(
+          (category) => category._id === row.categoryID
+        )?.type === 'income'
+    )
+    .reduce((acc, row) => acc + (row.amount || 0), 0)
+    .toFixed(2)
+);
+
+const leftForSaving = computed(() => {
+  const income = parseFloat(budgetIncomeTotal.value);
+  const expenses = parseFloat(budgetExpenseTotal.value);
+  return (income - expenses).toFixed(2);
+});
 
 rows.value = userStore.user.budgets.map((budget) => ({ ...budget }));
 
@@ -60,10 +92,12 @@ watch(rows, updateUsedCategories, { deep: true });
 <template>
   <modal-border>
     <div class="modal-content">
-      <h2 class="title">Your Budget</h2>
-      <button class="menu-button add-button" @click="addBudgetRow">
-        <SquarePlus /> New
-      </button>
+      <h2 class="title">Monthly Budget</h2>
+      <div class="info-section">
+        <button class="menu-button add-button" @click="addBudgetRow">
+          <SquarePlus /> New
+        </button>
+      </div>
       <div class="budget-rows">
         <div
           v-for="(row, index) in rows"
@@ -81,6 +115,24 @@ watch(rows, updateUsedCategories, { deep: true });
             @delete="removeBudgetRow(index)"
           />
         </div>
+      </div>
+      <div class="budget-amounts">
+        <span
+          >Income: <strong>${{ budgetIncomeTotal }}</strong></span
+        >
+        <span
+          >Expenses: <strong>${{ budgetExpenseTotal }}</strong></span
+        >
+        <span v-if="parseFloat(leftForSaving) > 0"
+          >Left for saving:
+          <strong class="isIncome">${{ leftForSaving }}</strong></span
+        >
+        <span v-else
+          >Loss:
+          <strong class="isLoss"
+            >${{ Math.abs(parseFloat(leftForSaving)) }}</strong
+          ></span
+        >
       </div>
       <div class="submit-section">
         <button class="menu-button cancel-button" @click="cancelEdit">
@@ -107,6 +159,25 @@ watch(rows, updateUsedCategories, { deep: true });
   font-weight: 600;
   margin: 0;
   text-align: center;
+}
+
+.info-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.budget-amounts {
+  display: flex;
+  justify-content: space-between;
+}
+
+.isIncome {
+  color: #3dcc98;
+}
+
+.isLoss {
+  color: #ff3d3d;
 }
 
 .add-button {

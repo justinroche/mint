@@ -132,6 +132,11 @@ amount.value = formatAmount(amount.value);
       <input
         v-model="amount"
         class="edit-budget-input amount-input"
+        :class="{
+          isIncome:
+            userStore.user.categories.find((c) => c.name === categoryName)
+              ?.type === 'income',
+        }"
         type="text"
         inputmode="decimal"
         placeholder="0.00"
@@ -186,10 +191,15 @@ amount.value = formatAmount(amount.value);
 
 .amount-input {
   font-size: 1.5rem;
+  font-weight: 600;
   text-align: right;
   padding-left: 35px;
   padding-right: 10px;
   width: 100%;
+}
+
+.isIncome {
+  color: #3dcc98;
 }
 
 /* Remove spinner for WebKit browsers */
