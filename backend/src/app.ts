@@ -240,32 +240,28 @@ app.delete('/users/:userID/transactions/:transactionID', async (req, res) => {
   }
 });
 
-// Add a new budget to the user's budgets array
-app.post('/users/:userID/budgets', async (req, res) => {
+// Update the user's budgets array
+app.put('/users/:userID/budgets', async (req, res) => {
   try {
     const { userID } = req.params;
-    const budget = req.body;
+    const budgets = req.body.budgets;
 
     if (!userID) {
       return res.status(400).json({ message: 'No user ID provided' });
     }
 
-    if (!budget || !budget.categoryID || !budget.amount) {
-      return res
-        .status(400)
-        .json({ message: 'Category ID and amount are required' });
+    if (!budgets || !Array.isArray(budgets)) {
+      return res.status(400).json({ message: 'Budgets must be an array' });
     }
 
-    const user = await updateUser(userID, {
-      $push: { budgets: budget },
-    });
+    const user = await updateUser(userID, { budgets });
 
-    return res.json(user.budgets.slice(-1)[0]);
+    return res.json(user.budgets);
   } catch (error: any) {
-    console.error('Error adding budget: ' + error.message);
+    console.error('Error updating budgets: ' + error.message);
     return res
       .status(500)
-      .json({ message: 'Error adding budget: ' + error.message });
+      .json({ message: 'Error updating budgets: ' + error.message });
   }
 });
 

@@ -1,7 +1,7 @@
 import { useUserStore } from '../stores/UserStore';
 import axios from 'axios';
 import { server_host, server_port } from '../config/config.json';
-import { Transaction, User } from '../types';
+import { Budget, Transaction, User } from '../types';
 
 const api = axios.create({
   baseURL: `http://${server_host}:${server_port}`,
@@ -112,6 +112,17 @@ export const removeTransaction = async (transactionID: string) => {
     userStore.user.transactions = userStore.user.transactions.filter(
       (t) => t._id !== transactionID
     );
+  } catch (error: any) {
+    return error.response.data.message;
+  }
+};
+
+export const updateBudgets = async (budgets: Budget[]) => {
+  try {
+    const response = await api.put(`/users/${userStore.user._id}/budgets`, {
+      budgets,
+    });
+    userStore.user.budgets = response.data;
   } catch (error: any) {
     return error.response.data.message;
   }

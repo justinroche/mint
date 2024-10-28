@@ -2,29 +2,61 @@
 import Dropdown from './Dropdown.vue';
 import { DollarSign, Trash2 } from 'lucide-vue-next';
 import { useUserStore } from '../stores/UserStore';
-import { computed, ref } from 'vue';
+import { computed, PropType, ref, watch } from 'vue';
 
 const props = defineProps({
-  category: String,
+  usedCategories: Array as PropType<string[]>,
+  categoryID: String,
   budgetAmount: Number,
 });
 
-const emit = defineEmits(['delete']);
-
-const categoryName = ref(props.category ?? '');
-const amount = ref(props.budgetAmount?.toString() ?? '');
+const emit = defineEmits(['update:categoryID', 'update:amount', 'delete']);
 
 const userStore = useUserStore();
 
+const categoryIDToName = (categoryID: string) =>
+  userStore.user.categories.find((c) => c._id === categoryID)?.name ?? '';
+
+const categoryNameToID = (categoryName: string) =>
+  userStore.user.categories.find((c) => c.name === categoryName)?._id ?? '';
+
+const categoryName = ref(categoryIDToName(props.categoryID!) ?? '');
+
+const amount = ref(props.budgetAmount?.toString() ?? '');
+if (!amount.value.includes('.')) {
+  amount.value += '.00';
+} else if (amount.value.split('.')[1].length === 1) {
+  amount.value += '0';
+}
+
 const categories = computed(() => userStore.user.categories);
 
+const unusedCategories = computed(() =>
+  categories.value.filter(
+    (category) => !props.usedCategories!.includes(category._id!)
+  )
+);
+
 const expenseCategories = computed(() =>
-  categories.value.filter((category) => category.type === 'expense')
+  unusedCategories.value.filter((category) => category.type === 'expense')
 );
 
 const incomeCategories = computed(() =>
-  categories.value.filter((category) => category.type === 'income')
+  unusedCategories.value.filter((category) => category.type === 'income')
 );
+
+// Watch for prop changes
+watch(
+  () => props.categoryID,
+  (newVal) => {
+    categoryName.value = categoryIDToName(newVal!) ?? '';
+  }
+);
+
+// Watch for local changes and emit updates
+watch(categoryName, (newVal) => {
+  emit('update:categoryID', categoryNameToID(newVal));
+});
 
 const formatAmount = (value: string) => {
   // Remove any non-digit characters
@@ -55,6 +87,12 @@ const handleAmountInput = (event: Event) => {
   // Update the input value
   amount.value = formattedValue;
 
+  // Emit the numeric value
+  const numericValue = parseFloat(formattedValue.replace(/,/g, ''));
+  emit('update:amount', isNaN(numericValue) ? 0 : numericValue);
+
+  amount.value = formattedValue;
+
   // Adjust cursor position
   setTimeout(() => {
     if (cursorPosition !== null) {
@@ -73,10 +111,14 @@ const handleAmountInput = (event: Event) => {
 const deleteBudget = () => {
   emit('delete');
 };
+
+// Format budget amount on mount
+amount.value = formatAmount(amount.value);
 </script>
 
 <template>
   <div class="budget-wrapper">
+    <!-- TODO: allow dropdown to expand outside of modal -->
     <dropdown
       class="budget-category-dropdown"
       :options="{
@@ -148,6 +190,19 @@ const deleteBudget = () => {
   padding-left: 35px;
   padding-right: 10px;
   width: 100%;
+}
+
+/* Remove spinner for WebKit browsers */
+.amount-input::-webkit-outer-spin-button,
+.amount-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove spinner for Firefox */
+.amount-input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .delete-button {
