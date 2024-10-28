@@ -94,6 +94,10 @@ watch(rows, updateUsedCategories, { deep: true });
     <div class="modal-content">
       <h2 class="title">Monthly Budget</h2>
       <div class="info-section">
+        <span class="info"
+          >Set your expected income and create spending limits across budget
+          categories.</span
+        >
         <button class="menu-button add-button" @click="addBudgetRow">
           <SquarePlus /> New
         </button>
@@ -165,6 +169,10 @@ watch(rows, updateUsedCategories, { deep: true });
   display: flex;
   justify-content: space-between;
   align-items: end;
+}
+
+.info {
+  width: 60%;
 }
 
 .budget-amounts {
