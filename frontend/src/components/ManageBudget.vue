@@ -132,7 +132,7 @@ watch(rows, updateUsedCategories, { deep: true });
           <strong class="isIncome">${{ leftForSaving }}</strong></span
         >
         <span v-else
-          >Loss:
+          >Expected loss:
           <strong class="isLoss"
             >${{ Math.abs(parseFloat(leftForSaving)) }}</strong
           ></span

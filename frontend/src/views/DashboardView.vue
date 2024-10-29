@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BudgetCategory from '../components/BudgetCategory.vue';
+import BudgetBreakdown from '../components/BudgetBreakdown.vue';
 import ManageBudget from '../components/ManageBudget.vue';
 import { useShowModalStore } from '../stores/ShowModalStore';
 
@@ -29,7 +29,7 @@ const openManageBudgetModal = () => {
           </button>
         </div>
         <div class="component-wrapper">
-          <h2 class="title">Budget breakdown</h2>
+          <budget-breakdown />
         </div>
       </div>
     </div>

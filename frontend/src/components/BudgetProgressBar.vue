@@ -10,6 +10,10 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  isIncome: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const spentPercent = computed(() => {
@@ -47,8 +51,10 @@ const monthProgressLinePosition = computed(() => {
         <div
           class="progress"
           :class="{
-            'exceeded-budget': props.spentAmount > props.budgetAmount,
-            'exceeded-month': spentPercent > monthProgressLinePosition,
+            'exceeded-budget':
+              props.spentAmount > props.budgetAmount && !props.isIncome,
+            'exceeded-month':
+              spentPercent > monthProgressLinePosition && !props.isIncome,
           }"
           :style="{ width: `${spentPercent}%` }"
         ></div>
@@ -103,7 +109,7 @@ const monthProgressLinePosition = computed(() => {
   width: 2px;
   height: 30px;
   background-color: #ddd;
-  z-index: 10;
+  z-index: 3;
 }
 
 .month-progress-line {
