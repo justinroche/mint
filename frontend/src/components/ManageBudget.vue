@@ -7,6 +7,7 @@ import { useUserStore } from '../stores/UserStore';
 import { computed, ref, watch } from 'vue';
 import { Budget } from '../types';
 import { updateBudgets } from '../clients/UserClient';
+import { formatNumberToCash } from '../utils/Utils';
 
 const userStore = useUserStore();
 const showModalStore = useShowModalStore();
@@ -23,7 +24,6 @@ const budgetExpenseTotal = computed(() =>
         )?.type === 'expense'
     )
     .reduce((acc, row) => acc + (row.amount || 0), 0)
-    .toFixed(2)
 );
 
 const budgetIncomeTotal = computed(() =>
@@ -36,13 +36,12 @@ const budgetIncomeTotal = computed(() =>
         )?.type === 'income'
     )
     .reduce((acc, row) => acc + (row.amount || 0), 0)
-    .toFixed(2)
 );
 
 const leftForSaving = computed(() => {
-  const income = parseFloat(budgetIncomeTotal.value);
-  const expenses = parseFloat(budgetExpenseTotal.value);
-  return (income - expenses).toFixed(2);
+  const income = budgetIncomeTotal.value;
+  const expenses = budgetExpenseTotal.value;
+  return income - expenses;
 });
 
 rows.value = userStore.user.budgets.map((budget) => ({ ...budget }));
@@ -122,20 +121,24 @@ watch(rows, updateUsedCategories, { deep: true });
       </div>
       <div class="budget-amounts">
         <span
-          >Income: <strong>${{ budgetIncomeTotal }}</strong></span
+          >Income:
+          <strong>{{ formatNumberToCash(budgetIncomeTotal) }}</strong></span
         >
         <span
-          >Expenses: <strong>${{ budgetExpenseTotal }}</strong></span
+          >Expenses:
+          <strong>{{ formatNumberToCash(budgetExpenseTotal) }}</strong></span
         >
-        <span v-if="parseFloat(leftForSaving) > 0"
+        <span v-if="leftForSaving > 0"
           >Left for saving:
-          <strong class="isIncome">${{ leftForSaving }}</strong></span
+          <strong class="isIncome">{{
+            formatNumberToCash(leftForSaving)
+          }}</strong></span
         >
         <span v-else
           >Expected loss:
-          <strong class="isLoss"
-            >${{ Math.abs(parseFloat(leftForSaving)) }}</strong
-          ></span
+          <strong class="isLoss">{{
+            formatNumberToCash(Math.abs(leftForSaving))
+          }}</strong></span
         >
       </div>
       <div class="submit-section">

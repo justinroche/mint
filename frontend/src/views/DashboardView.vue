@@ -28,7 +28,7 @@ const openManageBudgetModal = () => {
             Manage budget
           </button>
         </div>
-        <div class="component-wrapper">
+        <div class="component-wrapper breakdown-wrapper">
           <budget-breakdown />
         </div>
       </div>
@@ -42,12 +42,14 @@ const openManageBudgetModal = () => {
 <style scoped>
 .page-body {
   width: 100%;
+  height: calc(100vh - var(--header-height));
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 40px;
   padding-bottom: 40px;
   display: flex;
+  box-sizing: border-box;
 }
 
 .columns {
@@ -55,6 +57,7 @@ const openManageBudgetModal = () => {
   display: flex;
   flex-direction: row;
   gap: 20px;
+  height: 100%;
 }
 
 .left-column,
@@ -63,12 +66,19 @@ const openManageBudgetModal = () => {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  height: 100%;
 }
 
 .component-wrapper {
   border: 2px solid #ffffff80;
   padding: 20px;
   border-radius: 10px;
+}
+
+.breakdown-wrapper {
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
 }
 
 .title {

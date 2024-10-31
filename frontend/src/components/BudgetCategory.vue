@@ -2,6 +2,7 @@
 import BudgetProgressBar from './BudgetProgressBar.vue';
 import { useUserStore } from '../stores/UserStore';
 import { computed } from 'vue';
+import { formatNumberToCash } from '../utils/Utils';
 
 const userStore = useUserStore();
 
@@ -37,7 +38,7 @@ const budgetAmount = userStore.user.budgets.find(
 
 <template>
   <div class="budget-wrapper">
-    <h2 class="title">{{ props.category }}</h2>
+    <h3 class="title">{{ props.category }}</h3>
     <budget-progress-bar
       :spentAmount="Math.abs(transactionTotal)"
       :budgetAmount="budgetAmount!"
@@ -45,12 +46,12 @@ const budgetAmount = userStore.user.budgets.find(
     />
     <div class="budget-details">
       <div v-if="transactionTotal < 0">
-        <span>Spent: ${{ Math.abs(transactionTotal) }}</span>
-        <span>Budget: ${{ budgetAmount }}</span>
+        <span>Spent: {{ formatNumberToCash(Math.abs(transactionTotal)) }}</span>
+        <span>Budget: {{ formatNumberToCash(budgetAmount!) }}</span>
       </div>
       <div v-else>
-        <span>Earned: ${{ transactionTotal }}</span>
-        <span>Expected: ${{ budgetAmount }}</span>
+        <span>Earned: {{ formatNumberToCash(transactionTotal) }}</span>
+        <span>Expected: {{ formatNumberToCash(budgetAmount!) }}</span>
       </div>
     </div>
   </div>
@@ -58,12 +59,12 @@ const budgetAmount = userStore.user.budgets.find(
 
 <style scoped>
 .budget-wrapper {
-  border-bottom: 2px solid #ffffff80;
-  padding: 20px;
+  border-bottom: 2px solid #ffffff40;
+  padding: 15px;
 }
 
 .title {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
   margin: 0 0 10px 0;
 }

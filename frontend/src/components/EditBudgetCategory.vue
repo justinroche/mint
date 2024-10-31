@@ -3,6 +3,7 @@ import Dropdown from './Dropdown.vue';
 import { DollarSign, Trash2 } from 'lucide-vue-next';
 import { useUserStore } from '../stores/UserStore';
 import { computed, PropType, ref, watch } from 'vue';
+import { formatStringToCash } from '../utils/Utils';
 
 const props = defineProps({
   usedCategories: Array as PropType<string[]>,
@@ -58,31 +59,13 @@ watch(categoryName, (newVal) => {
   emit('update:categoryID', categoryNameToID(newVal));
 });
 
-const formatAmount = (value: string) => {
-  // Remove any non-digit characters
-  const digitsOnly = value.replace(/\D/g, '');
-
-  // If the input is empty or invalid, return an empty string
-  if (!digitsOnly) {
-    return '';
-  }
-
-  // Format as currency
-  const formatted = (parseInt(digitsOnly) / 100).toFixed(2);
-
-  // Add commas
-  const parts = formatted.split('.');
-  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  return parts.join('.');
-};
-
 const handleAmountInput = (event: Event) => {
   const input = event.target as HTMLInputElement;
   const cursorPosition = input.selectionStart;
   const oldValue = input.value;
 
   // Format the input value
-  const formattedValue = formatAmount(input.value);
+  const formattedValue = formatStringToCash(input.value);
 
   // Update the input value
   amount.value = formattedValue;
@@ -113,7 +96,7 @@ const deleteBudget = () => {
 };
 
 // Format budget amount on mount
-amount.value = formatAmount(amount.value);
+amount.value = formatStringToCash(amount.value);
 </script>
 
 <template>

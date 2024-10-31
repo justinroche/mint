@@ -5,6 +5,7 @@ import { DollarSign } from 'lucide-vue-next';
 import { addTransaction } from '../clients/UserClient';
 import { Transaction } from '../types';
 import Dropdown from './Dropdown.vue';
+import { formatStringToCash } from '../utils/Utils';
 
 const userStore = useUserStore();
 
@@ -31,31 +32,13 @@ const toggleIncome = () => {
   isIncome.value = !isIncome.value;
 };
 
-const formatAmount = (value: string) => {
-  // Remove any non-digit characters
-  const digitsOnly = value.replace(/\D/g, '');
-
-  // If the input is empty or invalid, return an empty string
-  if (!digitsOnly) {
-    return '';
-  }
-
-  // Format as currency
-  const formatted = (parseInt(digitsOnly) / 100).toFixed(2);
-
-  // Add commas
-  const parts = formatted.split('.');
-  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  return parts.join('.');
-};
-
 const handleAmountInput = (event: Event) => {
   const input = event.target as HTMLInputElement;
   const cursorPosition = input.selectionStart;
   const oldValue = input.value;
 
   // Format the input value
-  const formattedValue = formatAmount(input.value);
+  const formattedValue = formatStringToCash(input.value);
 
   // Update the input value
   amount.value = formattedValue;

@@ -5,6 +5,7 @@ import { useShowModalStore } from '../stores/ShowModalStore';
 import { useEditTransactionStore } from '../stores/EditTransactionStore';
 import { useFilterTransactionsStore } from '../stores/FilterTransactionsStore';
 import { Transaction } from '../types';
+import { formatNumberToCash } from '../utils/Utils';
 
 const userStore = useUserStore();
 const showModalStore = useShowModalStore();
@@ -86,13 +87,6 @@ const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString(undefined, options);
 };
 
-const formatAmount = (amount: number) => {
-  return amount.toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
-};
-
 const handleEditTransaction = (transaction: Transaction) => {
   editTransactionStore.id = transaction._id!;
   editTransactionStore.description = transaction.description;
@@ -152,7 +146,7 @@ const handleEditTransaction = (transaction: Transaction) => {
           >
             {{
               (transaction.amount > 0 ? '+' : '') +
-              formatAmount(Math.abs(transaction.amount))
+              formatNumberToCash(Math.abs(transaction.amount))
             }}
           </div>
         </div>
@@ -185,7 +179,7 @@ const handleEditTransaction = (transaction: Transaction) => {
           >
             {{
               (transaction.amount > 0 ? '+' : '') +
-              formatAmount(Math.abs(transaction.amount))
+              formatNumberToCash(Math.abs(transaction.amount))
             }}
           </div>
         </div>

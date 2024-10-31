@@ -51,16 +51,15 @@ const monthProgressLinePosition = computed(() => {
         <div
           class="progress"
           :class="{
-            'exceeded-budget':
-              props.spentAmount > props.budgetAmount && !props.isIncome,
-            'exceeded-month':
-              spentPercent > monthProgressLinePosition && !props.isIncome,
+            'exceeded-budget': props.spentAmount > props.budgetAmount,
+            'exceeded-month': spentPercent > monthProgressLinePosition,
+            'is-income': props.isIncome,
           }"
           :style="{ width: `${spentPercent}%` }"
         ></div>
         <div
           class="month-progress-line"
-          v-if="monthProgressLinePosition < 100"
+          v-if="monthProgressLinePosition < budgetLinePosition"
           :style="{ left: `${monthProgressLinePosition}%` }"
         ></div>
       </div>
@@ -91,7 +90,7 @@ const monthProgressLinePosition = computed(() => {
 
 .progress {
   height: 100%;
-  background-color: #3ac491;
+  background-color: #549980;
   border-radius: 3px;
 }
 
@@ -101,6 +100,10 @@ const monthProgressLinePosition = computed(() => {
 
 .exceeded-budget {
   background-color: #ff3d3d;
+}
+
+.is-income {
+  background-color: #2bb884;
 }
 
 .budget-line {
