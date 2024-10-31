@@ -90,7 +90,7 @@ const monthProgressLinePosition = computed(() => {
 
 .progress {
   height: 100%;
-  background-color: #549980;
+  background-color: #2bb884;
   border-radius: 3px;
 }
 
