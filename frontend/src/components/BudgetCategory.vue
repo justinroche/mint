@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import BudgetProgressBar from './BudgetProgressBar.vue';
 import { useUserStore } from '../stores/UserStore';
-import { computed } from 'vue';
 import { formatNumberToCash } from '../utils/Utils';
 
 const userStore = useUserStore();
@@ -17,17 +16,7 @@ const category = userStore.user.categories.find(
   (category) => category.name === props.category
 );
 
-const thisMonthsTransactions = computed(() => {
-  const currentDate = new Date();
-  const currentYearMonth = currentDate.toISOString().slice(0, 7);
-
-  return userStore.user.transactions.filter((transaction) => {
-    const transactionYearMonth = transaction.date.slice(0, 7);
-    return transactionYearMonth === currentYearMonth;
-  });
-});
-
-const transactionTotal = thisMonthsTransactions.value
+const transactionTotal = userStore.currentMonthsTransactions
   .filter((transaction) => transaction.categoryID === category!._id)
   .reduce((total, transaction) => total + transaction.amount, 0);
 
