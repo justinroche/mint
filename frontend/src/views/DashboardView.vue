@@ -2,12 +2,9 @@
 import BudgetBreakdown from '../components/BudgetBreakdown.vue';
 import ManageBudget from '../components/ManageBudget.vue';
 import { useShowModalStore } from '../stores/ShowModalStore';
+import BudgetStatus from '../components/BudgetStatus.vue';
 
 const showModalStore = useShowModalStore();
-
-const openManageBudgetModal = () => {
-  showModalStore.showManageBudgetModal = true;
-};
 </script>
 
 <template>
@@ -23,10 +20,7 @@ const openManageBudgetModal = () => {
       </div>
       <div class="right-column">
         <div class="component-wrapper">
-          <h2 class="title">Budget status</h2>
-          <button class="menu-button" @click="openManageBudgetModal">
-            Manage budget
-          </button>
+          <budget-status />
         </div>
         <div class="component-wrapper breakdown-wrapper">
           <budget-breakdown />
