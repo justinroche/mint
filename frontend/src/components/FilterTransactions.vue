@@ -68,7 +68,7 @@ const incomeCategories = computed(() =>
 .sort-filter-row {
   display: flex;
   justify-content: space-between;
-  gap: 25px;
+  gap: 20px;
 }
 
 .form-input {
