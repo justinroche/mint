@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+import { useDateStore } from '../stores/DateStore';
+
+const dateStore = useDateStore();
+
 const props = defineProps({
   spentAmount: {
     type: Number,
@@ -31,16 +35,7 @@ const budgetLinePosition = computed(() => {
 });
 
 const monthProgressLinePosition = computed(() => {
-  return (
-    (new Date().getDate() /
-      new Date(
-        new Date().getFullYear(),
-        new Date().getMonth() + 1,
-        0
-      ).getDate()) *
-    (budgetLinePosition.value / 100) *
-    100
-  );
+  return dateStore.amountThroughMonth * (budgetLinePosition.value / 100) * 100;
 });
 </script>
 
@@ -95,7 +90,7 @@ const monthProgressLinePosition = computed(() => {
 }
 
 .exceeded-month {
-  background-color: #078686;
+  background-color: rgb(221, 159, 60);
 }
 
 .exceeded-budget {
