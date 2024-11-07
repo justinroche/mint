@@ -16,7 +16,7 @@ export const useUserStore = defineStore('user', () => {
   });
 
   const currentMonthsExpensesTotal = computed(() => {
-    return (
+    return Math.abs(
       currentMonthsTransactions.value
         .filter(
           (transaction) =>
@@ -24,7 +24,7 @@ export const useUserStore = defineStore('user', () => {
               (category) => category._id === transaction.categoryID
             )?.type === 'expense'
         )
-        .reduce((acc, transaction) => acc + (transaction.amount || 0), 0) * -1
+        .reduce((acc, transaction) => acc + (transaction.amount || 0), 0)
     );
   });
 
