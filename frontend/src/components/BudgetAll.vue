@@ -21,7 +21,8 @@ const dateStore = useDateStore();
           {{ formatNumberToCash(userStore.currentMonthsExpensesTotal) }}</span
         >
         <span
-          >Target: ~{{
+          >Target:
+          {{
             formatNumberToCash(
               userStore.budgetExpenseTotal * dateStore.amountThroughMonth
             )
