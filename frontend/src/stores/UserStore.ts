@@ -15,8 +15,48 @@ export const useUserStore = defineStore('user', () => {
     });
   });
 
+  const currentMonthsExpensesTotal = computed(() => {
+    return (
+      currentMonthsTransactions.value
+        .filter(
+          (transaction) =>
+            user.value.categories.find(
+              (category) => category._id === transaction.categoryID
+            )?.type === 'expense'
+        )
+        .reduce((acc, transaction) => acc + (transaction.amount || 0), 0) * -1
+    );
+  });
+
+  const budgetExpenseTotal = computed(() => {
+    return user.value.budgets
+      .filter((budget) => budget.amount !== undefined)
+      .filter(
+        (budget) =>
+          user.value.categories.find(
+            (category) => category._id === budget.categoryID
+          )?.type === 'expense'
+      )
+      .reduce((acc, row) => acc + (row.amount || 0), 0);
+  });
+
+  const budgetIncomeTotal = computed(() => {
+    return user.value.budgets
+      .filter((budget) => budget.amount !== undefined)
+      .filter(
+        (budget) =>
+          user.value.categories.find(
+            (category) => category._id === budget.categoryID
+          )?.type === 'income'
+      )
+      .reduce((acc, row) => acc + (row.amount || 0), 0);
+  });
+
   return {
     user,
     currentMonthsTransactions,
+    currentMonthsExpensesTotal,
+    budgetExpenseTotal,
+    budgetIncomeTotal,
   };
 });
