@@ -34,7 +34,7 @@ const budgetAmount = userStore.user.budgets.find(
       :isIncome="category!.type === 'income'"
     />
     <div class="budget-details">
-      <div v-if="transactionTotal < 0">
+      <div v-if="category?.type === 'expense'">
         <span>Spent: {{ formatNumberToCash(Math.abs(transactionTotal)) }}</span>
         <span>Budget: {{ formatNumberToCash(budgetAmount!) }}</span>
       </div>
