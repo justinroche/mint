@@ -2,9 +2,15 @@
 import BudgetBreakdown from '../components/BudgetBreakdown.vue';
 import ManageBudget from '../components/ManageBudget.vue';
 import { useShowModalStore } from '../stores/ShowModalStore';
+import { useUserStore } from '../stores/UserStore';
 import BudgetStatus from '../components/BudgetStatus.vue';
 
 const showModalStore = useShowModalStore();
+const userStore = useUserStore();
+
+const openManageBudgetModal = () => {
+  showModalStore.showManageBudgetModal = true;
+};
 </script>
 
 <template>
@@ -18,7 +24,17 @@ const showModalStore = useShowModalStore();
           <h2 class="title">Income vs expenses by month</h2>
         </div>
       </div>
-      <div class="right-column">
+      <div
+        class="right-column create-budget-column"
+        v-if="userStore.user.budgets.length === 0"
+      >
+        <div class="component-wrapper">
+          <button class="menu-button" @click="openManageBudgetModal">
+            Set up budget
+          </button>
+        </div>
+      </div>
+      <div v-else class="right-column">
         <div class="component-wrapper">
           <budget-status />
         </div>
