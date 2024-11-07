@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import AddATransaction from '../components/AddATransaction.vue';
 import FilterTransactions from '../components/FilterTransactions.vue';
-import ManageCategories from '../components/ManageCategories.vue';
 import Transactions from '../components/Transactions.vue';
 import EditTransaction from '../components/EditTransaction.vue';
 import { useShowModalStore } from '../stores/ShowModalStore';
@@ -18,9 +17,6 @@ const showModalStore = useShowModalStore();
         </div>
         <div class="component-wrapper">
           <add-a-transaction />
-        </div>
-        <div class="component-wrapper">
-          <manage-categories />
         </div>
       </div>
       <div class="right-column">
