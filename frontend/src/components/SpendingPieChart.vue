@@ -75,22 +75,31 @@ const chartOptions: ChartOptions<'pie'> = {
 
 <template>
   <h2 class="title">Spending by category this month</h2>
-  <div class="chart-container">
+  <div
+    v-if="userStore.currentMonthsExpensesByCategory.length === 0"
+    class="no-chart"
+  >
+    <p class="no-expenses">No expenses yet this month.</p>
+  </div>
+  <div v-else class="chart-container">
     <Pie :data="chartData" :options="chartOptions" />
   </div>
 </template>
 
 <style scoped>
 .title {
+  text-align: center;
   font-size: 1.5rem;
   font-weight: 600;
-  margin: 0 0 20px 0;
+  margin: 0 0 30px 0;
+}
+
+.no-expenses {
+  text-align: center;
+  margin: 0;
 }
 
 .chart-container {
-  width: 100%;
-  border-radius: 10px;
-  background-color: var(--color-white);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
 </style>
