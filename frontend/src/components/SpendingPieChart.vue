@@ -59,6 +59,9 @@ const chartOptions: ChartOptions<'pie'> = {
   plugins: {
     legend: {
       position: 'right',
+      labels: {
+        color: '#FFFFFF',
+      },
     },
     tooltip: {
       callbacks: {
@@ -68,6 +71,13 @@ const chartOptions: ChartOptions<'pie'> = {
           return `${label}: $${value}`;
         },
       },
+      bodyColor: '#FFFFFF',
+      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    },
+  },
+  elements: {
+    arc: {
+      borderWidth: 0, // Removes borders between pie segments
     },
   },
 };
