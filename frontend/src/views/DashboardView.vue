@@ -2,6 +2,7 @@
 import BudgetBreakdown from '../components/BudgetBreakdown.vue';
 import ManageBudget from '../components/ManageBudget.vue';
 import SpendingPieChart from '../components/SpendingPieChart.vue';
+import IncomeExpensesBars from '../components/IncomeExpensesBars.vue';
 import { useShowModalStore } from '../stores/ShowModalStore';
 import { useUserStore } from '../stores/UserStore';
 import BudgetStatus from '../components/BudgetStatus.vue';
@@ -22,7 +23,7 @@ const openManageBudgetModal = () => {
           <spending-pie-chart />
         </div>
         <div class="component-wrapper">
-          <h2 class="title">Income vs expenses by month</h2>
+          <income-expenses-bars />
         </div>
       </div>
       <div
