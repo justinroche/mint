@@ -18,16 +18,8 @@ const openManageBudgetModal = () => {
 <template>
   <div class="page-body">
     <div class="columns">
-      <div class="left-column">
-        <div class="component-wrapper">
-          <spending-pie-chart />
-        </div>
-        <div class="component-wrapper">
-          <income-expenses-bars />
-        </div>
-      </div>
       <div
-        class="right-column create-budget-column"
+        class="left-column create-budget-column"
         v-if="userStore.user.budgets.length === 0"
       >
         <div class="component-wrapper">
@@ -36,12 +28,20 @@ const openManageBudgetModal = () => {
           </button>
         </div>
       </div>
-      <div v-else class="right-column">
+      <div v-else class="left-column">
         <div class="component-wrapper">
           <budget-status />
         </div>
         <div class="component-wrapper breakdown-wrapper">
           <budget-breakdown />
+        </div>
+      </div>
+      <div class="right-column">
+        <div class="component-wrapper">
+          <spending-pie-chart />
+        </div>
+        <div class="component-wrapper">
+          <income-expenses-bars />
         </div>
       </div>
     </div>
