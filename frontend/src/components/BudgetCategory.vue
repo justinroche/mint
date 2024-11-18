@@ -38,7 +38,9 @@ const budgetAmount = userStore.user.budgets.find(
 
 <template>
   <div class="budget-wrapper">
-    <h3 class="title">{{ props.category }}</h3>
+    <h3 class="title" :class="{ isIncome: category?.type === 'income' }">
+      {{ props.category }}
+    </h3>
     <budget-progress-bar
       :spentAmount="adjustedTransactionTotal"
       :budgetAmount="budgetAmount!"
@@ -67,6 +69,11 @@ const budgetAmount = userStore.user.budgets.find(
   font-size: 1.25rem;
   font-weight: 600;
   margin: 0 0 10px 0;
+}
+
+.isIncome {
+  color: #3dcc98;
+  font-weight: 700;
 }
 
 .budget-details div {

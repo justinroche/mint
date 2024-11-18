@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useUserStore } from '../stores/UserStore';
 import { Bar } from 'vue-chartjs';
 import {
   Chart as ChartJS,
@@ -8,6 +9,7 @@ import {
   BarElement,
   CategoryScale,
   LinearScale,
+  TooltipItem,
 } from 'chart.js';
 
 // Register the components we need
@@ -20,29 +22,45 @@ ChartJS.register(
   LinearScale
 );
 
-// Original data
-const data = [
-  ['2024-01', '5000', '1100'],
-  ['2024-02', '6000', '1200'],
-  ['2024-03', '5000', '1300'],
-  ['2024-04', '6000', '1300'],
-  ['2024-05', '5000', '1200'],
-  ['2024-06', '6000', '1100'],
-];
+const userStore = useUserStore();
 
-// Transform data for Chart.js - converting strings to numbers
+// Transform user store data
+const data = Object.entries(userStore.incomeAndExpensesByMonth);
+
+// Generate the last 6 months
+const currentDate = new Date();
+const lastSixMonths = Array.from({ length: 6 }, (_, i) => {
+  const date = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth() - i,
+    1
+  );
+  return date.toISOString().slice(0, 7); // Format as 'YYYY-MM'
+}).reverse();
+
+// Map data to the last 6 months and fill blanks with 0
+const mappedData = lastSixMonths.map((month) => {
+  const entry = data.find(([key]) => key === month);
+  return {
+    month,
+    income: entry ? Number(entry[1].income) : 0,
+    expenses: entry ? Math.abs(Number(entry[1].expenses)) : 0,
+  };
+});
+
+// Prepare data for Chart.js
 const chartData = {
-  labels: data.map((item) => item[0]), // year-month
+  labels: mappedData.map(({ month }) => month), // Labels for the chart
   datasets: [
     {
       label: 'Income',
       backgroundColor: '#3eb489', // green
-      data: data.map((item) => Number(item[1])), // Convert to number
+      data: mappedData.map(({ income }) => income), // Income values
     },
     {
       label: 'Expenses',
       backgroundColor: '#c3c3c3', // gray
-      data: data.map((item) => Number(item[2])), // Convert to number
+      data: mappedData.map(({ expenses }) => expenses), // Expenses values
     },
   ],
 };
@@ -70,6 +88,17 @@ const chartOptions = {
     legend: {
       position: 'right' as const,
     },
+    tooltip: {
+      callbacks: {
+        label: (context: TooltipItem<'bar'>) => {
+          const label = context.dataset.label || '';
+          const value = context.formattedValue || 0;
+          return `${label}: $${value}`;
+        },
+      },
+      bodyColor: '#FFFFFF',
+      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    },
   },
 };
 </script>
@@ -84,13 +113,13 @@ const chartOptions = {
 <style scoped>
 .title {
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 600;
   margin: 0 0 30px 0;
 }
 
 .chart-container {
-  height: 300px;
+  height: 250px;
   width: 100%;
 }
 </style>

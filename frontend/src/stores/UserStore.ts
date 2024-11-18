@@ -69,6 +69,52 @@ export const useUserStore = defineStore('user', () => {
       .reduce((acc, row) => acc + (row.amount || 0), 0);
   });
 
+  const expensesByMonth = computed(() => {
+    return user.value.transactions
+      .filter(
+        (transaction) =>
+          user.value.categories.find(
+            (category) => category._id === transaction.categoryID
+          )?.type === 'expense'
+      )
+      .reduce((acc, transaction) => {
+        const transactionYearMonth = transaction.date.slice(0, 7);
+        if (!acc[transactionYearMonth]) {
+          acc[transactionYearMonth] = 0;
+        }
+        acc[transactionYearMonth] += transaction.amount || 0;
+        return acc;
+      }, {} as { [key: string]: number });
+  });
+
+  const incomeByMonth = computed(() => {
+    return user.value.transactions
+      .filter(
+        (transaction) =>
+          user.value.categories.find(
+            (category) => category._id === transaction.categoryID
+          )?.type === 'income'
+      )
+      .reduce((acc, transaction) => {
+        const transactionYearMonth = transaction.date.slice(0, 7);
+        if (!acc[transactionYearMonth]) {
+          acc[transactionYearMonth] = 0;
+        }
+        acc[transactionYearMonth] += transaction.amount || 0;
+        return acc;
+      }, {} as { [key: string]: number });
+  });
+
+  const incomeAndExpensesByMonth = computed(() => {
+    return Object.keys(expensesByMonth.value).reduce((acc, key) => {
+      acc[key] = {
+        expenses: expensesByMonth.value[key],
+        income: incomeByMonth.value[key] || 0,
+      };
+      return acc;
+    }, {} as { [key: string]: { expenses: number; income: number } });
+  });
+
   return {
     user,
     currentMonthsTransactions,
@@ -76,5 +122,8 @@ export const useUserStore = defineStore('user', () => {
     currentMonthsExpensesByCategory,
     budgetExpenseTotal,
     budgetIncomeTotal,
+    expensesByMonth,
+    incomeByMonth,
+    incomeAndExpensesByMonth,
   };
 });
