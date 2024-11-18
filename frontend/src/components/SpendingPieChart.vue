@@ -75,11 +75,6 @@ const chartOptions: ChartOptions<'pie'> = {
       backgroundColor: 'rgba(0, 0, 0, 0.8)',
     },
   },
-  elements: {
-    arc: {
-      borderWidth: 0, // Removes borders between pie segments
-    },
-  },
 };
 </script>
 
@@ -99,7 +94,7 @@ const chartOptions: ChartOptions<'pie'> = {
 <style scoped>
 .title {
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 600;
   margin: 0 0 30px 0;
 }
