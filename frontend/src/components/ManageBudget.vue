@@ -75,6 +75,20 @@ const saveChanges = async () => {
     amount: row.amount,
   }));
 
+  // Sort budgets: income first, then expense
+  budgets.sort((a, b) => {
+    const aType = userStore.user.categories.find(
+      (cat) => cat._id === a.categoryID
+    )?.type;
+    const bType = userStore.user.categories.find(
+      (cat) => cat._id === b.categoryID
+    )?.type;
+
+    if (aType === 'income' && bType === 'expense') return -1;
+    if (aType === 'expense' && bType === 'income') return 1;
+    return 0;
+  });
+
   await updateBudgets(budgets as Budget[]);
   showModalStore.showManageBudgetModal = false;
 };
