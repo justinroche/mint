@@ -142,7 +142,7 @@ watch(rows, updateUsedCategories, { deep: true });
           >Expenses:
           <strong>{{ formatNumberToCash(budgetExpenseTotal) }}</strong></span
         >
-        <span v-if="leftForSaving > 0"
+        <span v-if="leftForSaving >= 0"
           >Left for saving:
           <strong class="isIncome">{{
             formatNumberToCash(leftForSaving)
