@@ -47,4 +47,4 @@ Then start a development build:
 npm run dev
 ```
 
-The console will display the URL of the local server. Navigate to this address to access the application.
+The console will display the URL of the local server. Navigate to this address in a browser to access the application.
