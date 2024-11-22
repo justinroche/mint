@@ -4,7 +4,7 @@ A web-based budgeting application
 
 ## Developer notes
 
-To test all functionality of this application, you will need to run builds of both the front end and back end. If you are missing `./frontend/src/config/config.json` or `./backend/src/config/config.json`, the application will not run correctly. Contact me if you run into any issues.
+To test all functionality of this application, you will need to run builds of both the front end and back end. If you are missing `./frontend/src/config/config.json` or `./backend/src/config/config.json`, the application will not run correctly. Feel free to contact me if you run into any issues.
 
 ### Running a back end build
 
