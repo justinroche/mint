@@ -13,13 +13,13 @@ const showModalStore = useShowModalStore();
     <div class="columns">
       <div class="left-column">
         <div class="component-wrapper">
-          <filter-transactions />
-        </div>
-        <div class="component-wrapper">
           <add-a-transaction />
         </div>
       </div>
       <div class="right-column">
+        <div class="component-wrapper">
+          <filter-transactions />
+        </div>
         <div class="component-wrapper transactions-wrapper">
           <transactions />
         </div>
