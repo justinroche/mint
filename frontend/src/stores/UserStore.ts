@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { User } from '../types';
+import { Budget, User } from '../types';
 import { ref, computed } from 'vue';
 
 export const useUserStore = defineStore('user', () => {
@@ -115,6 +115,13 @@ export const useUserStore = defineStore('user', () => {
     }, {} as { [key: string]: { expenses: number; income: number } });
   });
 
+  function updateBudgets(newBudgets: Budget[]) {
+    user.value = {
+      ...user.value,
+      budgets: newBudgets,
+    };
+  }
+
   return {
     user,
     currentMonthsTransactions,
@@ -125,5 +132,6 @@ export const useUserStore = defineStore('user', () => {
     expensesByMonth,
     incomeByMonth,
     incomeAndExpensesByMonth,
+    updateBudgets,
   };
 });

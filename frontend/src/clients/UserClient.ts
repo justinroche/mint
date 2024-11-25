@@ -122,7 +122,7 @@ export const updateBudgets = async (budgets: Budget[]) => {
     const response = await api.put(`/users/${userStore.user._id}/budgets`, {
       budgets,
     });
-    userStore.user.budgets = response.data;
+    userStore.updateBudgets(response.data);
   } catch (error: any) {
     return error.response.data.message;
   }
