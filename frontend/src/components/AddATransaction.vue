@@ -171,7 +171,7 @@ watch(
       </div>
       <div class="submit-section">
         <button class="menu-button submit-button" type="submit">
-          Add {{ isIncome ? 'income' : 'expense' }}
+          Save {{ isIncome ? 'income' : 'expense' }}
         </button>
       </div>
     </form>
